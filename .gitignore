@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+
+# Archivos de entorno
+.env
+
+# Archivos de Docker
+*.pid
+*.log
+
+# Carpetas de Django
+/media/
+staticfiles/
