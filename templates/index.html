@@ -4,10 +4,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Restaurant</title>
-    <link rel="stylesheet" href="static/style.css">
+    <title>Restaurante</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
 </head>
 <body>
+
+  <div id="inicio">
+  <button>Ordena Aquí</button>
+</div>
+<!---->
+<!--Formulario-->
+<div id="formulario" style="display:none; text-align:center; margin-top:20px;">
+  <h2>Ingresa tus datos</h2>
+  <form id="datosForm">
+    <label for="nombre">Nombre:</label><br>
+    <input type="text" id="nombre" name="nombre" required><br><br>
+
+    <label for="personas">Cantidad de personas:</label><br>
+    <input type="number" id="personas" name="personas" min="1" required><br><br>
+
+    <button type="submit">Continuar</button>
+  </form>
+</div>
+
+<div id="menu" style="display:none;">
+
+  <!--MODIFICAR LINEA, SOLO PARA QUE EN LA CONSOLA SALGA SIN ERRORES-->
+   <p id="resumen" style="text-align:center; font-weight:bold; margin-bottom:10px;"></p>
   
 <h2>Control de Mesas</h2>
 <!--Eliminacion de formulario de pruebas-->
@@ -16,7 +39,7 @@
   <button id="btnPiso2">Segundo Piso</button>
 </div>
 
-<!-- Primer Piso -->
+<!--Primer Piso-->
 <div class="salon" id="primer-piso">
   <div id="mesa1" class="mesa disponible" role="button" tabindex="0" aria-pressed="false" aria-label="Mesa 1 disponible">
     <div class="chair top"></div>
@@ -52,7 +75,7 @@
   </div>
 </div>
 
-<!-- Segundo Piso -->
+<!--Segundo Piso-->
 <div class="salon" id="segundo-piso" style="display:none;">
   <div id="mesa4" class="mesa disponible" role="button" tabindex="0" aria-pressed="false" aria-label="Mesa 4 disponible">
     <div class="chair top"></div>
@@ -76,10 +99,14 @@
     <div class="timer">00:00:00</div>
   </div>
 </div>
+</div>
 
+<div id="acciones" style="text-align: center; margin-top: 20px; display: none;">
+    <button id="btnIrMenu">Ir al Menú</button>
+  </div>
     
 
-<script src="static/index.js"></script>
+<script src="{% static 'index.js' %}"></script>
 </body>
 </html>
 

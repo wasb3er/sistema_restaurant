@@ -1,5 +1,6 @@
 body{
     background-color: rgb(255, 255, 255);
+    text-align: center;
 }
 
 .mesa {
@@ -152,4 +153,97 @@ h2{ margin-bottom: 12px; }
   margin-top: 4px;
   font-weight: bold;
   color: red; /* Para que se vea */
+}
+
+#inicio {
+  /*margin-top: 20%; BORRAR LUEGO*/
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* ocupa el alto completo de la pantalla */
+}
+
+#inicio button {
+  font-size: 24px;
+  padding: 15px 40px;
+  border: none;
+  border-radius: 10px;
+  background-color: #ff6600;
+  color: white;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+#inicio button:hover {
+  background-color: #e65c00;
+}
+
+
+/* -------------------- MENU PRINCIPAL - PARA DISPOSITIVOS MOVILES -------------------- */
+#menu {
+  display: none; /* oculto al inicio */
+  margin-top: 20px;
+}
+
+/* Responsivo para tablets y móviles */
+@media (max-width: 768px) {
+  .salon {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 10px;
+  }
+
+  .mesa {
+    height: 140px;
+  }
+
+  .table {
+    width: 60px;
+    height: 60px;
+  }
+
+  .chair {
+    width: 22px;
+    height: 22px;
+  }
+}
+
+@media (max-width: 480px) {
+  .salon {
+    grid-template-columns: 1fr; /* Una sola mesa por fila */
+  }
+
+  .mesa {
+    height: 120px;
+  }
+
+  #inicio button {
+    font-size: 20px;
+    padding: 12px 30px;
+  }
+}
+
+
+/*BOTÓN DE ACCION PARA IR AL MENÚ*/
+
+#acciones {
+  position: fixed;          /* fija el contenedor en la pantalla */
+  bottom: 20px;             /* distancia desde el borde inferior */
+  left: 50%;                /* centrado horizontal */
+  transform: translateX(-50%); /* corrige el centrado */
+  text-align: center;       /* centra el contenido si hay más de un botón */
+}
+
+#acciones button {
+  font-size: 20px;
+  padding: 12px 30px;
+  border: none;
+  border-radius: 8px;
+  background-color: #28a745;
+  color: white;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+#acciones button:hover {
+  background-color: #218838;
 }

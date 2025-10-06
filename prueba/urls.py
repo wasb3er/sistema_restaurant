@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import path
 from django.http import HttpResponse
 from django.shortcuts import render
+from . import views
 
 def index(request):
     return render(request, "index.html")
@@ -26,4 +27,5 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("", index, name="index"),       # raíz
     path("index/", index, name="index"), # opcional
+    path("menu/", views.menu_view, name="menu"), # mostrar nuevo menu.html
 ]
