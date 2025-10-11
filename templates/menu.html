@@ -6,15 +6,64 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="{% static 'style.css' %}">
-</head>
+    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}"><!--Link icono-->
+</head >
 <body>
-    <h1>HACER MENU PARA MOSTRAR LOS PLATILLOS DEL DIA</h1>
+<div></div>
     <button onclick="window.location.href='/'">Volver</button>
     <div id="acciones" style="text-align: center; margin-top: 20px; display: none;">
-    <button id="btnIrMenu">Ir al Menú</button>
+    <div id="menu">
+  <button id="btnVolver">Volver al inicio</button>
+</div>
   </div>
 
-  <script src="{% static 'index.js' %}"></script>
+  <h2>Menú de Platillos</h2>
+<div class="tabla-container">
+  <table border="1" class="tabla-platillos">
+    <tr>
+      <th>Nombre</th>
+      <th>Descripción</th>
+      <th>Precio</th>
+      <th>Cantidad disponible</th>
+      <th>Acción</th>
+    </tr>
+
+    {% for p in platillos %}
+    <tr id="platillo-{{ p.id }}">
+      <td>{{ p.nombre }}</td>
+      <td>{{ p.descripcion }}</td>
+      <td>${{ p.precio }}</td>
+      <td id="cantidad-{{ p.id }}">{{ p.cantidad }}</td>
+      <td>
+        <button onclick="agregarAlCarrito({{ p.id }}, '{{ p.nombre }}', {{ p.precio }})">Agregar al carrito</button>
+      </td>
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan="5">No hay platillos disponibles.</td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+  <br>
+
+  <!--Carrito-->
+  <h3>Carrito</h3>
+  <ul id="carrito-lista"></ul>
+  <p><strong>Total:</strong> $<span id="total">0</span></p>
+
+  <button id="btn-confirmar" onclick="confirmarPedido()">Confirmar Pedido</button>
+
+  <br><br>
+  <a href="{% url 'index' %}">Volver al inicio</a>
+
+
+{% comment %} <a href="{% url 'index' %}">Volver al inicio</a> {% endcomment %}
+
+  <script src="{% static 'js/index.js' %}"></script>
+
+
+
 </body>
 </html>
 

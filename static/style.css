@@ -25,8 +25,8 @@ body{
 }
 
 :root{
-  --ok: #1f8a2b;      /* verde */
-  --busy: #c62828;    /* rojo */
+  --ok: #1f8a2b;      /*verde - disponible*/
+  --busy: #c62828;    /*rojo - ocupado*/
   --card: #f7f7f7;
   --text: #222;
 }
@@ -63,7 +63,7 @@ h2{ margin-bottom: 12px; }
   box-shadow: 0 0 0 3px rgba(0, 120, 255, .35);
 }
 
-/* Mesa (círculo central) */
+/*Mesa (círculo central) - AGREGAR MAS MESAS CON SILLAS*/
 .table{
   width: 70px;
   height: 70px;
@@ -74,7 +74,7 @@ h2{ margin-bottom: 12px; }
   box-shadow: inset 0 0 0 2px rgba(0,0,0,.05);
 }
 
-/* Sillas (4) */
+/*Sillas (4) - AGREGAR MAS SILLAS CON MESAS*/
 .chair{
   position: absolute;
   width: 26px;
@@ -116,7 +116,7 @@ h2{ margin-bottom: 12px; }
   font-size: 12px;
 }
 
-/* Estados */
+/*Estados de las mesas*/
 .disponible .table,
 .disponible .chair{
   border-color: var(--ok);
@@ -152,7 +152,7 @@ h2{ margin-bottom: 12px; }
   display: block;
   margin-top: 4px;
   font-weight: bold;
-  color: red; /* Para que se vea */
+  color: red; /*Para que se vea el color de la mesa tomada*/
 }
 
 #inicio {
@@ -160,7 +160,7 @@ h2{ margin-bottom: 12px; }
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh; /* ocupa el alto completo de la pantalla */
+  height: 100vh; /*ocupa el alto completo de la pantalla*/
 }
 
 #inicio button {
@@ -181,11 +181,11 @@ h2{ margin-bottom: 12px; }
 
 /* -------------------- MENU PRINCIPAL - PARA DISPOSITIVOS MOVILES -------------------- */
 #menu {
-  display: none; /* oculto al inicio */
+  display: none; /*oculto al inicio*/
   margin-top: 20px;
 }
 
-/* Responsivo para tablets y móviles */
+/*Responsivo para dispositivos móviles*/
 @media (max-width: 768px) {
   .salon {
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
@@ -209,7 +209,7 @@ h2{ margin-bottom: 12px; }
 
 @media (max-width: 480px) {
   .salon {
-    grid-template-columns: 1fr; /* Una sola mesa por fila */
+    grid-template-columns: 1fr; /*Una sola mesa por fila*/
   }
 
   .mesa {
@@ -226,11 +226,11 @@ h2{ margin-bottom: 12px; }
 /*BOTÓN DE ACCION PARA IR AL MENÚ*/
 
 #acciones {
-  position: fixed;          /* fija el contenedor en la pantalla */
-  bottom: 20px;             /* distancia desde el borde inferior */
-  left: 50%;                /* centrado horizontal */
-  transform: translateX(-50%); /* corrige el centrado */
-  text-align: center;       /* centra el contenido si hay más de un botón */
+  position: fixed;          /*fija el contenedor en la pantalla*/
+  bottom: 20px;             /*distancia desde el borde inferior*/
+  left: 50%;                /*centrado horizontal*/
+  transform: translateX(-50%); /*corrige el centrado*/
+  text-align: center;       /*centra el contenido si hay más de un botón*/
 }
 
 #acciones button {
@@ -246,4 +246,71 @@ h2{ margin-bottom: 12px; }
 
 #acciones button:hover {
   background-color: #218838;
+}
+
+/*MODIFICAR LUEGO, PRUEBA*/
+/*  TABLA DE PLATILLOS  */
+
+.tabla-container {
+  width: 100%;
+  overflow-x: auto;             /*permite scroll si la tabla es ancha*/
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.tabla-platillos {
+  width: 100%;
+  max-width: 600px;             /*ancho máximo centrado*/
+  border-collapse: collapse;
+  background-color: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  font-size: 16px;
+}
+
+.tabla-platillos th,
+.tabla-platillos td {
+  padding: 12px 10px;
+  text-align: center;
+  border-bottom: 1px solid #ddd;
+}
+
+.tabla-platillos th {
+  background-color: #f4f4f4;
+  font-weight: 600;
+}
+
+.tabla-platillos button {
+  background-color: #ff6600;    /*color coherente con el botón principal*/
+  border: none;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.tabla-platillos button:hover {
+  background-color: #e65c00;    /*tono hover igual al del botón principal*/
+}
+
+/*Versión para móvil */
+@media (max-width: 600px) {
+  .tabla-platillos {
+    font-size: 14px;
+  }
+
+  .tabla-platillos th,
+  .tabla-platillos td {
+    padding: 8px;
+  }
+
+  .tabla-platillos button {
+    padding: 4px 8px;
+    font-size: 12px;
+  }
 }

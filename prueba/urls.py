@@ -25,7 +25,9 @@ def index(request):
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", index, name="index"),       # raíz
-    path("index/", index, name="index"), # opcional
-    path("menu/", views.menu_view, name="menu"), # mostrar nuevo menu.html
+    path("", index, name="index"),       #raíz
+    path("index/", index, name="index"), #opcional, si no funciona "" como principal
+    path("menu/", views.menu_view, name="menu"), #mostrar menu.html
+    #path('descontar/<int:id>/', views.descontar_platillo, name='descontar_platillo'), #descuenta un platillo, modifica la cantidad -- BORRAR
+    path('crear_pedido/', views.crear_pedido, name='crear_pedido'), #creacion del pedido
 ]
