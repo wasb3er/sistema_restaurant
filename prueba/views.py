@@ -1,10 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from .models import Platillo, DetallePedido, Pedido
-from django.shortcuts import render, get_object_or_404 #
+from django.shortcuts import render, get_object_or_404
 import json
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
+from django.contrib.auth.decorators import login_required
 
 def index(request):
     return HttpResponse("¡Hola, Django ya está usando tu vista!")
@@ -13,7 +14,7 @@ from django.http import HttpResponse
 
 def menu_view(request):
     platillos = Platillo.objects.all()
-    return render(request, "menu.html", {"platillos": platillos})
+    return render(request, "menu.html", {"platillos": platillos, "user": request.user})
 
 ##DESCONTAR EL PLATILLO DEL DIA
 @csrf_exempt ##SOLO PARA PRUEBAS, CAMBIAR EL TOKEN A UNO MAS SEGURO -- HACER PRUEBAS
@@ -75,50 +76,115 @@ def crear_pedido(request):
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)})
 
+##CREAR
+@csrf_exempt
+def crear_platillo(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            Platillo.objects.create(
+                nombre=data.get('nombre'),
+                descripcion=data.get('descripcion'),
+                precio=data.get('precio'),
+                cantidad=data.get('cantidad', 0)
+            )
+            return JsonResponse({'success': True})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+    return JsonResponse({'success': False, 'error': 'Método no permitido'}, status=405)
 
+##LEER
+def listar_platillos(request):
+    platillos = list(Platillo.objects.values())
+    return JsonResponse({'platillos': platillos})
 
+##MODIFICAR
+@csrf_exempt
+def editar_platillo(request, id):
+    if request.method == 'PUT':
+        try:
+            platillo = get_object_or_404(Platillo, id=id)
+            data = json.loads(request.body)
 
+            platillo.nombre = data.get('nombre', platillo.nombre)
+            platillo.descripcion = data.get('descripcion', platillo.descripcion)
+            platillo.precio = data.get('precio', platillo.precio)
+            platillo.cantidad = data.get('cantidad', platillo.cantidad)
+            platillo.save()
 
-##BORRAR CODIGO DE PRUEBAS, LIMPIAR VIEWS
+            return JsonResponse({'success': True})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+    return JsonResponse({'success': False, 'error': 'Método no permitido'}, status=405)
 
-##DESCONTAR PLATILLO, SOLO JS, NO GUARDA NADA
+##ELIMINAR
+@csrf_exempt
+def eliminar_platillo(request, id):
+    if request.method == 'DELETE':
+        try:
+            platillo = get_object_or_404(Platillo, id=id)
+            platillo.delete()
+            return JsonResponse({'success': True})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+    return JsonResponse({'success': False, 'error': 'Método no permitido'}, status=405)
 
-# @csrf_exempt
-# def descontar_platillo(request, id):
-#     if request.method == "POST":
-#         try:
-#             platillo = Platillo.objects.get(pk=id)
-#             if platillo.cantidad > 0:
-#                 platillo.cantidad -= 1
-#                 platillo.save()
-#                 return JsonResponse({'success': True, 'nueva_cantidad': platillo.cantidad})
-#             else:
-#                 return JsonResponse({'success': False, 'error': 'Sin stock disponible'})
-#         except Platillo.DoesNotExist:
-#             return JsonResponse({'success': False, 'error': 'Platillo no encontrado'})
-#     return JsonResponse({'success': False, 'error': 'Método no permitido'})
+##PARA INGRESAR A LA VISTA ADMIN SERÁ SOLAMENTE CON LOGIN REQUEST, SI NO SE CAERA - HACER UN BOTON PARA INGRESAR USUARIO - CAMBIAR
+@login_required
+def admin_menu(request):
+    pedidos = Pedido.objects.all().order_by('-id')
+    platillos = Platillo.objects.all()
+    return render(request, 'admin-menu.html', {
+        'pedidos': pedidos,
+        'platillos': platillos
+    })
 
+@login_required
+def cambiar_estado_pedido(request, pedido_id):
+    pedido = get_object_or_404(Pedido, id=pedido_id)
+    if pedido.estado == 'pendiente':
+        pedido.estado = 'terminado'
+    else:
+        pedido.estado = 'pendiente'
+    pedido.save()
+    return redirect('admin_menu')
 
+##
+@login_required
+def eliminar_pedido(request, pedido_id):
+    pedido = get_object_or_404(Pedido, id=pedido_id)
+    pedido.delete()
+    return redirect('admin_menu')
 
+##muestra el detalle, json para ver si el pedido ya termino y fue eliminado
+@login_required
+def detalle_pedido(request, pedido_id):
+    try:
+        pedido = Pedido.objects.get(pk=pedido_id, estado='pendiente')
+        data = {
+            "id": pedido.id,
+            "nombre_cliente": pedido.nombre_cliente,
+            "personas": pedido.personas,
+            "total": float(pedido.total),
+            "estado": pedido.estado,
+            "fecha": pedido.fecha.strftime("%Y-%m-%d %H:%M:%S"),
+        }
+        return JsonResponse(data, safe=False)
+    except Pedido.DoesNotExist:
+        return JsonResponse({"error": "Pedido no encontrado o ya terminado"}, status=404)
 
-# def descontar_cantidad(request, platillo_id):
-#     platillo = get_object_or_404(Platillo, id=platillo_id)
-
-#     if platillo.cantidad > 0:
-#         platillo.cantidad -= 1
-#         platillo.save()
-#         return JsonResponse({'success': True, 'nueva_cantidad': platillo.cantidad})
-#     else:
-#         return JsonResponse({'success': False, 'error': 'Sin stock disponible'})
-
-
-
-
-# def lista_platillos(request):
-#     platillos = list(Platillo.objects.values())
-#     return JsonResponse({'platillos': platillos})
-
-##MUESTRA LA LISTA DE PLATILLOS
-# def menu(request):
-#     platillos = Platillo.objects.all()
-#     return render(request, 'menu.html', {'platillos': platillos})
+##mostrar los pedidos pendientes en la url
+@login_required
+def pedidos_pendientes(request):
+    pedidos = Pedido.objects.filter(estado='pendiente').order_by('-id')
+    data = [
+        {
+            "id": p.id,
+            "nombre_cliente": p.nombre_cliente,
+            "personas": p.personas,
+            "total": float(p.total),
+            "fecha": p.fecha.strftime("%Y-%m-%d %H:%M:%S"),
+        }
+        for p in pedidos
+    ]
+    return JsonResponse(data, safe=False)

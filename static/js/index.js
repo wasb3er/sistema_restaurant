@@ -174,23 +174,38 @@ if (datosForm) {
     actualizarCarrito();
   };
 
-  function actualizarCarrito() {
-    const lista = document.getElementById("carrito-lista");
-    const totalEl = document.getElementById("total");
-    if (!lista || !totalEl) return;
+  window.eliminarDelCarrito = function (id) {
+  const producto = carrito.find(p => p.id === id);
+  if (!producto) return;
 
-    lista.innerHTML = "";
-    let total = 0;
-
-    carrito.forEach(item => {
-      total += item.precio * item.cantidad;
-      const li = document.createElement("li");
-      li.textContent = `${item.nombre} x${item.cantidad} - $${item.precio * item.cantidad}`;
-      lista.appendChild(li);
-    });
-
-    totalEl.textContent = total.toFixed(2);
+  if (producto.cantidad > 1) {
+    producto.cantidad -= 1;
+  } else {
+    carrito = carrito.filter(p => p.id !== id);
   }
+  actualizarCarrito();
+};
+
+function actualizarCarrito() {
+  const lista = document.getElementById("carrito-lista");
+  const totalEl = document.getElementById("total");
+  if (!lista || !totalEl) return;
+
+  lista.innerHTML = "";
+  let total = 0;
+
+  carrito.forEach(item => {
+    total += item.precio * item.cantidad;
+    const li = document.createElement("li");
+    li.innerHTML = `
+      ${item.nombre} x${item.cantidad} - $${(item.precio * item.cantidad).toFixed(2)}
+      <button onclick="eliminarDelCarrito(${item.id})">Eliminar</button>
+    `;
+    lista.appendChild(li);
+  });
+
+  totalEl.textContent = total.toFixed(2);
+}
 
 //CONFIRMAR PEDIDO 
   window.confirmarPedido = function () {
@@ -248,4 +263,137 @@ if (datosForm) {
     return cookieValue;
   }
 
+  //Cargar lista de platillos dinámicamente
+async function cargarPlatillos() {
+  const tabla = document.getElementById("tabla-platillos");
+  if (!tabla) return; //Si no estás en menu.html, salir
+
+  try {
+    const res = await fetch("/api/platillos/");
+    const data = await res.json();
+    tabla.innerHTML = "";
+
+    data.platillos.forEach(p => {
+  const fila = document.createElement("tr");
+  fila.id = `platillo-${p.id}`;
+
+  //Detectar si el usuario es staff leyendo una variable global de Django
+  const isStaff = window.USER_IS_STAFF === true || window.USER_IS_STAFF === "true";
+
+const esAdminMenu = window.location.pathname.includes("/admin-menu/");
+
+fila.innerHTML = `
+  <td>${p.nombre}</td>
+  <td>${p.descripcion || ""}</td>
+  <td>$${p.precio}</td>
+  <td id="cantidad-${p.id}">${p.cantidad}</td>
+  <td>
+    ${!esAdminMenu ? `
+      <button onclick="agregarAlCarrito(${p.id}, '${p.nombre}', ${p.precio})">Agregar</button>
+    ` : ""}
+    ${isStaff ? `
+      <button onclick="editarPlatillo(${p.id}, '${p.nombre}', '${p.descripcion || ""}', ${p.precio}, ${p.cantidad})">Editar</button>
+      <button onclick="eliminarPlatillo(${p.id})">Borrar</button>
+    ` : ""}
+  </td>
+`;
+  tabla.appendChild(fila);
+});
+  } catch (err) {
+    console.error("Error al cargar platillos:", err);
+  }
+}
+
+//crear
+const formCrear = document.getElementById("form-crear");
+if (formCrear) {
+  formCrear.addEventListener("submit", async e => {
+    e.preventDefault();
+    const datos = Object.fromEntries(new FormData(formCrear).entries());
+
+    try {
+      const res = await fetch("/api/platillos/crear/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": getCookie("csrftoken"),
+        },
+        body: JSON.stringify(datos),
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        alert("Platillo agregado correctamente");
+        formCrear.reset();
+        cargarPlatillos();
+      } else {
+        alert("Error al agregar platillo: " + (data.error || ""));
+      }
+    } catch (err) {
+      console.error("Error al crear platillo:", err);
+    }
+  });
+}
+
+//editar
+window.editarPlatillo = async function (id, nombre, descripcion, precio, cantidad) {
+  const nuevoNombre = prompt("Nuevo nombre:", nombre);
+  if (!nuevoNombre) return;
+
+  const nuevaDescripcion = prompt("Nueva descripción:", descripcion);
+  const nuevoPrecio = prompt("Nuevo precio:", precio);
+  const nuevaCantidad = prompt("Nueva cantidad:", cantidad);
+
+  try {
+    const res = await fetch(`/api/platillos/${id}/editar/`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": getCookie("csrftoken"),
+      },
+      body: JSON.stringify({
+        nombre: nuevoNombre,
+        descripcion: nuevaDescripcion,
+        precio: nuevoPrecio,
+        cantidad: nuevaCantidad,
+      }),
+    });
+
+    const data = await res.json();
+    if (data.success) {
+      alert("Platillo actualizado correctamente");
+      cargarPlatillos();
+    } else {
+      alert("Error al editar platillo: " + (data.error || ""));
+    }
+  } catch (err) {
+    console.error("Error al editar platillo:", err);
+  }
+};
+
+//borrado
+window.eliminarPlatillo = async function (id) {
+  if (!confirm("¿Seguro que deseas eliminar este platillo?")) return;
+  try {
+    const res = await fetch(`/api/platillos/${id}/eliminar/`, {
+      method: "DELETE",
+      headers: {"X-CSRFToken": getCookie("csrftoken")},
+    });
+    const data = await res.json();
+
+    if (data.success) {
+      alert("Platillo eliminado correctamente");
+      cargarPlatillos();
+    } else {
+      alert("Error al eliminar platillo: " + (data.error || ""));
+    }
+  } catch (err) {
+    console.error("Error al eliminar platillo:", err);
+  }
+};
+
+//Cargar los platillos automáticamente al entrar en menu.html
+if (document.getElementById("tabla-platillos")) {
+  cargarPlatillos();
+}
 });

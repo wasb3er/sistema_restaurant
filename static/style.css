@@ -12,6 +12,11 @@ body{
   text-align: center;
   font-weight: bold;
   border: none;
+/*ADVERTENCIA EN CONSOLA, PARA COMPATIBILIDAD DE SISTEMAS-EJEMPLO: VERSIONES VIEJAS DE EDGE, CHROME O IOS*/
+  -webkit-user-select: none; 
+  -moz-user-select: none;    
+  -ms-user-select: none;     
+  user-select: none;         
 }
 
 .disponible {

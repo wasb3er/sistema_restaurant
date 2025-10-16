@@ -8,6 +8,9 @@
     <link rel="stylesheet" href="{% static 'style.css' %}">
     <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}"> <!--botón para el icono en la pestaña-->
 </head >
+<button class="btn-admin" onclick="window.location.href='{% url 'login' %}'">
+  Ingresar como administrador
+</button>
 <body>
 
   <div id="inicio">

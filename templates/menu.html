@@ -1,53 +1,73 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="{% static 'style.css' %}">
-    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}"><!--Link icono-->
-</head >
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Menú de Platillos</title>
+  <link rel="stylesheet" href="{% static 'style.css' %}">
+  <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+</head>
+
 <body>
-<div></div>
-    <button onclick="window.location.href='/'">Volver</button>
-    <div id="acciones" style="text-align: center; margin-top: 20px; display: none;">
-    <div id="menu">
-  <button id="btnVolver">Volver al inicio</button>
-</div>
-  </div>
+  <button onclick="window.location.href='/'">Volver</button>
 
   <h2>Menú de Platillos</h2>
-<div class="tabla-container">
-  <table border="1" class="tabla-platillos">
-    <tr>
-      <th>Nombre</th>
-      <th>Descripción</th>
-      <th>Precio</th>
-      <th>Cantidad disponible</th>
-      <th>Acción</th>
-    </tr>
 
-    {% for p in platillos %}
-    <tr id="platillo-{{ p.id }}">
-      <td>{{ p.nombre }}</td>
-      <td>{{ p.descripcion }}</td>
-      <td>${{ p.precio }}</td>
-      <td id="cantidad-{{ p.id }}">{{ p.cantidad }}</td>
-      <td>
-        <button onclick="agregarAlCarrito({{ p.id }}, '{{ p.nombre }}', {{ p.precio }})">Agregar al carrito</button>
-      </td>
-    </tr>
-    {% empty %}
-    <tr>
-      <td colspan="5">No hay platillos disponibles.</td>
-    </tr>
-    {% endfor %}
-  </table>
-</div>
-  <br>
+  {% if user.is_staff %}
+  <form id="form-crear" style="margin-bottom: 20px;">
+    <input type="text" name="nombre" placeholder="Nombre" required>
+    <input type="text" name="descripcion" placeholder="Descripción">
+    <input type="number" name="precio" placeholder="Precio" step="0.01" required>
+    <input type="number" name="cantidad" placeholder="Cantidad disponible" min="0" required>
+    <button type="submit">Agregar Platillo</button>
+  </form>
+  {% endif %}
 
-  <!--Carrito-->
+  <div class="tabla-container">
+    {% comment %} <p>Usuario actual: {{ user.username }} | Es staff: {{ user.is_staff }}</p> {% endcomment %}
+
+    <table border="1" class="tabla-platillos">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Descripción</th>
+          <th>Precio</th>
+          <th>Cantidad disponible</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody id="tabla-platillos">
+        {% for p in platillos %}
+        <tr id="platillo-{{ p.id }}">
+          <td>{{ p.nombre }}</td>
+          <td>{{ p.descripcion }}</td>
+          <td>${{ p.precio }}</td>
+          <td id="cantidad-{{ p.id }}">{{ p.cantidad }}</td>
+          <td>
+            <button onclick="agregarAlCarrito({{ p.id }}, '{{ p.nombre }}', {{ p.precio }})">
+              Agregar
+            </button>
+
+            {% if user.is_staff %}
+              <button onclick="editarPlatillo({{ p.id }}, '{{ p.nombre }}', '{{ p.descripcion }}', {{ p.precio }}, {{ p.cantidad }})">
+                Editar
+              </button>
+              <button onclick="eliminarPlatillo({{ p.id }})">Eliminar</button>
+            {% endif %}
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="5">No hay platillos disponibles.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <hr>
+
   <h3>Carrito</h3>
   <ul id="carrito-lista"></ul>
   <p><strong>Total:</strong> $<span id="total">0</span></p>
@@ -57,15 +77,9 @@
   <br><br>
   <a href="{% url 'index' %}">Volver al inicio</a>
 
-
-{% comment %} <a href="{% url 'index' %}">Volver al inicio</a> {% endcomment %}
-
+<script>
+  window.USER_IS_STAFF = {{ user.is_staff|yesno:"true,false" }};
+</script>
   <script src="{% static 'js/index.js' %}"></script>
-
-
-
 </body>
 </html>
-
-
-<!--boton volver pruebas: <button onclick="window.location.href='/'">Volver</button>-->

@@ -19,15 +19,41 @@ from django.urls import path
 from django.http import HttpResponse
 from django.shortcuts import render
 from . import views
+from django.contrib.auth import views as auth_views
 
 def index(request):
     return render(request, "index.html")
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", index, name="index"),       #raíz
-    path("index/", index, name="index"), #opcional, si no funciona "" como principal
-    path("menu/", views.menu_view, name="menu"), #mostrar menu.html
-    #path('descontar/<int:id>/', views.descontar_platillo, name='descontar_platillo'), #descuenta un platillo, modifica la cantidad -- BORRAR
-    path('crear_pedido/', views.crear_pedido, name='crear_pedido'), #creacion del pedido
+
+##opcional, si no funciona "" como principal
+    path("", index, name="index"),#raíz
+    path("index/", index, name="index"),#opcional
+
+##mostrar menu.html
+    path("menu/", views.menu_view, name="menu"), 
+
+##creacion del pedido
+    path('crear_pedido/', views.crear_pedido, name='crear_pedido'),
+
+##crud
+    path("api/platillos/", views.listar_platillos, name="listar_platillos"),
+    path("api/platillos/crear/", views.crear_platillo, name="crear_platillo"),
+    path("api/platillos/<int:id>/editar/", views.editar_platillo, name="editar_platillo"),
+    path("api/platillos/<int:id>/eliminar/", views.eliminar_platillo, name="eliminar_platillo"),
+
+##menu del administrador
+    path('admin-menu/', views.admin_menu, name='admin_menu'),
+
+##Ingreso de usuario, se debe crear un superusuario primero - cambiar por una creacion de usuario
+    path('login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
+    path('logout/', auth_views.LogoutView.as_view(next_page='/'), name='logout'),
+
+##ver pedidos, cambiar, eliminar - muestra un JSON como respuesta en url
+    path('pedido/<int:pedido_id>/cambiar/', views.cambiar_estado_pedido, name='cambiar_estado_pedido'),
+    path('pedido/<int:pedido_id>/eliminar/', views.eliminar_pedido, name='eliminar_pedido'),
+    path('pedido/<int:pedido_id>/', views.detalle_pedido, name='detalle_pedido'),
+    path('pedidos/pendientes/', views.pedidos_pendientes, name='pedidos_pendientes'),
+
 ]

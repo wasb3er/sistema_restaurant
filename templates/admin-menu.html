@@ -1,0 +1,94 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Administrador</title>
+  <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+  <h2>Panel del Administrador - Platillos</h2>
+  {% comment %} <button onclick="window.location.href='/'">Volver al inicio</button> {% endcomment %}
+
+  <!--Formulario para crear-->
+  <form id="form-crear" style="margin-top:20px;">
+    <input type="text" name="nombre" placeholder="Nombre" required>
+    <input type="text" name="descripcion" placeholder="Descripción">
+    <input type="number" name="precio" placeholder="Precio" step="0.01" required>
+    <input type="number" name="cantidad" placeholder="Cantidad" required>
+    <button type="submit">Agregar Platillo</button>
+  </form>
+
+  <hr>
+
+  <!--Tabla de platillos-->
+  <table border="1" class="tabla-platillos">
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Descripción</th>
+        <th>Precio</th>
+        <th>Cantidad</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody id="tabla-platillos"></tbody>
+    
+  </table>
+
+
+  <h2>Panel de Pedidos</h2>
+
+  {% if pedidos %}
+  <table border="1" style="margin:auto; border-collapse:collapse;">
+    <tr>
+      <th>ID</th>
+      <th>Cliente</th>
+      <th>Personas</th>
+      <th>Total</th>
+      <th>Estado</th>
+      <th>Acciones</th>
+    </tr>
+    {% for pedido in pedidos %}
+    <tr>
+      <td>{{ pedido.id }}</td>
+      <td>{{ pedido.nombre_cliente }}</td>
+      <td>{{ pedido.personas }}</td>
+      <td>${{ pedido.total }}</td>
+      <td>{{ pedido.estado }}</td>
+      <td>
+      
+        <!--se usa pedido.pk (clave primaria)-->
+        <a href="{% url 'cambiar_estado_pedido' pedido.pk %}">
+          {% if pedido.estado == 'pendiente' %}
+            Marcar Terminado
+          {% else %}
+            Marcar Pendiente
+          {% endif %}
+        </a> |
+        <a href="{% url 'eliminar_pedido' pedido.pk %}"
+           onclick="return confirm('¿Seguro que deseas eliminar este pedido?')">
+           Eliminar
+        </a>
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% else %}
+    <p style="text-align:center;">No hay pedidos registrados.</p>
+  {% endif %}
+
+  <!--Logout - Salir-->
+  <form action="{% url 'logout' %}" method="post" style="display:inline;">
+    {% csrf_token %}
+    <button type="submit">Cerrar sesión</button>
+  </form>
+  
+  <script>
+    // Define al usuario como administrador para el JS
+    window.USER_IS_STAFF = true;
+  </script>
+  <script src="{% static 'js/index.js' %}"></script>
+</body>
+</html>
