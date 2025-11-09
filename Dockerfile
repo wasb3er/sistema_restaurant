@@ -10,6 +10,7 @@ RUN apt-get update && apt-get install -y \
     postgresql-client \
     netcat-openbsd \
  && rm -rf /var/lib/apt/lists/*
+ RUN pip install Pillow
 
 #Directorio de trabajo dentro del contenedor
 WORKDIR /app

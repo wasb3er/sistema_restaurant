@@ -20,6 +20,8 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from . import views
 from django.contrib.auth import views as auth_views
+from django.conf import settings
+from django.conf.urls.static import static
 
 def index(request):
     return render(request, "index.html")
@@ -45,10 +47,13 @@ urlpatterns = [
 
 ##menu del administrador
     path('admin-menu/', views.admin_menu, name='admin_menu'),
+    path('mesero_menu/', views.mesero_menu, name='mesero_menu'),
+    path("crear_empleado/", views.crear_empleado, name="crear_empleado"),
 
 ##Ingreso de usuario, se debe crear un superusuario primero - cambiar por una creacion de usuario
-    path('login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
+    # path('login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(next_page='/'), name='logout'),
+    path('login_general/', views.login_general, name='login_general'),
 
 ##ver pedidos, cambiar, eliminar - muestra un JSON como respuesta en url
     path('pedido/<int:pedido_id>/cambiar/', views.cambiar_estado_pedido, name='cambiar_estado_pedido'),
@@ -57,3 +62,6 @@ urlpatterns = [
     path('pedidos/pendientes/', views.pedidos_pendientes, name='pedidos_pendientes'),
 
 ]
+##Lleva las imagenes para su uso en la parte frontal
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

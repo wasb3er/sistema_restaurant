@@ -1,0 +1,119 @@
+/* Fondo con degradado y animación suave */
+#inicio {
+  background: linear-gradient(135deg, #1f1c2c, #928dab);
+  background-size: 200% 200%;
+  animation: fondoMovimiento 10s ease infinite;
+  color: white;
+}
+
+/* Título elegante */
+.titulo {
+  font-size: 3rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+}
+
+/* Subtítulo */
+.subtitulo {
+  font-size: 1.3rem;
+  color: #f1f1f1;
+  text-shadow: 1px 1px 5px rgba(0,0,0,0.2);
+}
+
+/* Botones principales */
+.boton-orden {
+  background: #ff6b6b;
+  border: none;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.boton-orden:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 15px rgba(255,107,107,0.7);
+}
+
+/* Botón secundario */
+.boton-menu {
+  border: 2px solid #000 !important;
+  color: #000 !important;
+  background: transparent;
+  font-weight: 500;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  padding: 10px 25px;
+}
+
+.boton-menu:hover {
+  background: #000 !important;
+  color: #fff !important; /* ← texto blanco sobre fondo negro */
+  transform: scale(1.05);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+
+/* Animación del fondo */
+@keyframes fondoMovimiento {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Animación inicial */
+.animate__fadeInUp {
+  animation-duration: 1.5s;
+}
+
+
+/* Fondo con degradado dinámico */
+body {
+  background: linear-gradient(135deg, #1f1c2c, #928dab);
+  background-size: 200% 200%;
+  animation: fondoAnimado 8s ease infinite;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Tarjeta de login */
+.login-card {
+  border-radius: 20px;
+  width: 100%;
+  max-width: 400px;
+  background-color: #ffffff;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.login-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Botón principal */
+.boton-login {
+  background: #6b68a6;
+  border: none;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.boton-login:hover {
+  background: #5a52e0;
+  transform: scale(1.03);
+}
+
+/* Inputs */
+.form-control {
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  transition: all 0.2s ease;
+}
+
+.form-control:focus {
+  border-color: #6c63ff;
+  box-shadow: 0 0 5px rgba(108, 99, 255, 0.5);
+}
+
+/* Animación del fondo */
+@keyframes fondoAnimado {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}

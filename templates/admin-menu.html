@@ -8,87 +8,150 @@
   <link rel="stylesheet" href="{% static 'style.css' %}">
 </head>
 <body>
-  <h2>Panel del Administrador - Platillos</h2>
-  {% comment %} <button onclick="window.location.href='/'">Volver al inicio</button> {% endcomment %}
 
-  <!--Formulario para crear-->
-  <form id="form-crear" style="margin-top:20px;">
-    <input type="text" name="nombre" placeholder="Nombre" required>
-    <input type="text" name="descripcion" placeholder="Descripción">
-    <input type="number" name="precio" placeholder="Precio" step="0.01" required>
-    <input type="number" name="cantidad" placeholder="Cantidad" required>
-    <button type="submit">Agregar Platillo</button>
-  </form>
+  <!-- NUEVO: Encabezado principal -->
+  <header class="admin-header">
+    <h1>Panel del Administrador</h1>
+    <div class="user-info">
+       {{ request.session.empleado_nombre }}
+      <form action="{% url 'logout' %}" method="post" style="display:inline;">
+        {% csrf_token %}
+        <button type="submit" class="btn-logout">Cerrar sesión</button>
+      </form>
+    </div>
+  </header>
 
-  <hr>
-
-  <!--Tabla de platillos-->
-  <table border="1" class="tabla-platillos">
-    <thead>
-      <tr>
-        <th>Nombre</th>
-        <th>Descripción</th>
-        <th>Precio</th>
-        <th>Cantidad</th>
-        <th>Acciones</th>
-      </tr>
-    </thead>
-    <tbody id="tabla-platillos"></tbody>
-    
-  </table>
-
-
-  <h2>Panel de Pedidos</h2>
-
-  {% if pedidos %}
-  <table border="1" style="margin:auto; border-collapse:collapse;">
-    <tr>
-      <th>ID</th>
-      <th>Cliente</th>
-      <th>Personas</th>
-      <th>Total</th>
-      <th>Estado</th>
-      <th>Acciones</th>
-    </tr>
-    {% for pedido in pedidos %}
-    <tr>
-      <td>{{ pedido.id }}</td>
-      <td>{{ pedido.nombre_cliente }}</td>
-      <td>{{ pedido.personas }}</td>
-      <td>${{ pedido.total }}</td>
-      <td>{{ pedido.estado }}</td>
-      <td>
-      
-        <!--se usa pedido.pk (clave primaria)-->
-        <a href="{% url 'cambiar_estado_pedido' pedido.pk %}">
-          {% if pedido.estado == 'pendiente' %}
-            Marcar Terminado
-          {% else %}
-            Marcar Pendiente
-          {% endif %}
-        </a> |
-        <a href="{% url 'eliminar_pedido' pedido.pk %}"
-           onclick="return confirm('¿Seguro que deseas eliminar este pedido?')">
-           Eliminar
-        </a>
-      </td>
-    </tr>
+  {% if messages %}
+  <div class="messages">
+    {% for message in messages %}
+      <div class="alert {{ message.tags }}">{{ message }}</div>
     {% endfor %}
-  </table>
-  {% else %}
-    <p style="text-align:center;">No hay pedidos registrados.</p>
+  </div>
   {% endif %}
+  <!--Contenedor general del panel-->
+  <main class="admin-dashboard">
+    <!--Menu de platillos-->
+    <section class="card">
+      <h2>Gestión de Platillos</h2>
+      
+      <form id="form-crear" enctype="multipart/form-data" style="margin-top:20px;">
+  <input type="text" name="nombre" placeholder="Nombre" required>
+  <input type="text" name="descripcion" placeholder="Descripción">
+  <input type="number" name="precio" placeholder="Precio" step="0.01" required>
+  <input type="number" name="cantidad" placeholder="Cantidad" required>
 
-  <!--Logout - Salir-->
-  <form action="{% url 'logout' %}" method="post" style="display:inline;">
-    {% csrf_token %}
-    <button type="submit">Cerrar sesión</button>
-  </form>
-  
+  <div class="input-imagen">
+    <label>Seleccionar imagen</label>
+    <input type="file" name="imagen" accept="image/*">
+  </div>
+
+  <button type="submit" id="btn-agregar">Agregar Platillo</button>
+  <button type="button" id="btn-actualizar" class="oculto">Actualizar Platillo</button>
+</form>
+
+      <table class="tabla-platillos">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>Precio</th>
+            <th>Cantidad</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="tabla-platillos"></tbody>
+      </table>
+    </section>
+
+    <!--Pedidos-->
+    <section class="card">
+      <h2>Panel de Pedidos</h2>
+      {% if pedidos %}
+      <table class="tabla-platillos">
+        <tr>
+          <th>ID</th>
+          <th>Cliente</th>
+          <th>Personas</th>
+          <th>Total</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+        {% for pedido in pedidos %}
+        <tr>
+          <td>{{ pedido.id }}</td>
+          <td>{{ pedido.nombre_cliente }}</td>
+          <td>{{ pedido.personas }}</td>
+          <td>${{ pedido.total }}</td>
+          <td>{{ pedido.estado }}</td>
+          <td>
+            <a href="{% url 'cambiar_estado_pedido' pedido.pk %}" class="btn-small">
+              {% if pedido.estado == 'pendiente' %}
+                 Terminar
+              {% else %}
+                 Pendiente
+              {% endif %}
+            </a>
+          </td>
+        </tr>
+        {% endfor %}
+      </table>
+      {% else %}
+        <p>No hay pedidos registrados.</p>
+      {% endif %}
+    </section>
+
+    <!--Empleados-->
+    <section class="card">
+      <h2>Gestión de Empleados</h2>
+      <button id="addEmployeeBtn" class="btn-primary">+ Agregar Mesero</button>
+      <table class="tabla-platillos">
+        <thead>
+          <tr><th>Nombre</th><th>Usuario</th><th>Rol</th><th>Activo</th></tr>
+        </thead>
+        <tbody>
+          {% for e in empleados %}
+          <tr>
+            <td>{{ e.nombre }}</td>
+            <td>{{ e.username }}</td>
+            <td>{{ e.rol }}</td>
+            <td>{{ e.activo|yesno:"Sí,No" }}</td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="4">No hay empleados registrados</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <!--Modal para agregar mesero-->
+  <div id="employeeModal" class="modal hidden">
+    <div class="modal-content">
+      <h3>Agregar nuevo mesero</h3>
+      <form id="employeeForm" method="post" action="{% url 'crear_empleado' %}">
+        {% csrf_token %}
+        <input type="text" name="nombre" placeholder="Nombre completo" required>
+        <input type="text" name="username" placeholder="Usuario" required>
+        <input type="password" name="password" placeholder="Contraseña" required>
+        <input type="hidden" name="rol" value="Mesero"> <br>
+        <button type="submit" class="btn-primary">Guardar</button>
+        <button type="button" class="btn-secondary" id="closeModal">Cancelar</button>
+      </form>
+    </div>
+  </div>
+
   <script>
-    // Define al usuario como administrador para el JS
     window.USER_IS_STAFF = true;
   </script>
   <script src="{% static 'js/index.js' %}"></script>
+  <script>
+    //Control modal
+    const modal = document.getElementById('employeeModal');
+    const addBtn = document.getElementById('addEmployeeBtn');
+    const closeBtn = document.getElementById('closeModal');
+    addBtn.onclick = () => modal.classList.remove('hidden');
+    closeBtn.onclick = () => modal.classList.add('hidden');
+    window.onclick = e => { if (e.target === modal) modal.classList.add('hidden'); };
+  </script>
 </body>
 </html>

@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from pathlib import Path
 from decouple import config
 import os
+import sys
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -139,9 +140,20 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-#Después del login, redirige aquí
+#Redirecciones para pruebas - postman
+LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/admin-menu/'
-
-#Después del logout, redirige aquí
 LOGOUT_REDIRECT_URL = '/login/'
 
+#Para pruebas
+TEST = 'pytest' in sys.modules
+#Pruebas de usuario
+AUTH_USER_MODEL = 'prueba.Usuario'
+
+#Prueba para que la ruta de las imagenes se muestren dentro de media/platillos
+if os.path.exists("/app/media"):
+    MEDIA_ROOT = "/app/media"
+else:
+    MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
+MEDIA_URL = "/media/"

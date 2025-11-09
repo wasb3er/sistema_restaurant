@@ -319,3 +319,238 @@ h2{ margin-bottom: 12px; }
     font-size: 12px;
   }
 }
+
+/* 🎯 Carrito lateral fijo */
+.carrito-lateral {
+  width: 25%;                 /* ocupa un 25% del ancho */
+  right: 0;                   /* se alinea a la derecha */
+  top: 0;
+  height: 100vh;              /* ocupa toda la altura */
+  overflow-y: auto;           /* permite hacer scroll si hay muchos productos */
+  z-index: 1050;              /* se mantiene sobre otros elementos */
+}
+
+@media (max-width: 992px) {
+  .carrito-lateral {
+    position: static;         /* en pantallas pequeñas se vuelve normal */
+    width: 100%;
+    height: auto;
+  }
+}
+
+/* === ADMIN DASHBOARD === */
+.admin-header {
+  background: #16191c;
+  color: white;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 15px;
+}
+
+.admin-dashboard {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 20px;
+  padding: 20px;
+}
+
+.card {
+  background: #f7f7f7;
+  border-radius: 12px;
+  padding: 15px;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+}
+
+.admin-form input, 
+.admin-form textarea {
+  display: block;
+  width: 100%;
+  margin: 6px 0;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.btn-primary {
+  background-color: #2f9d58;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  cursor: pointer;
+}
+
+.btn-secondary {
+  background-color: #aaa;
+  color: black;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.btn-small {
+  background-color: #ff6600;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.btn-small:hover {
+  background-color: #e65c00;
+}
+
+.btn-logout {
+  background: #c62828;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+.modal {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal.hidden { display: none; }
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 320px;
+}
+
+/*Mensajes*/
+.messages {
+  max-width: 600px;
+  margin: 20px auto;
+  text-align: center;
+}
+.alert {
+  padding: 10px 16px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+.alert.success {
+  background: #d4edda;
+  color: #155724;
+}
+.alert.error {
+  background: #f8d7da;
+  color: #721c24;
+}
+.alert.warning {
+  background: #fff3cd;
+  color: #856404;
+}
+
+
+/*Estilos adicionales para el switch*/
+    .switch-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .switch-label {
+      margin: 0 10px;
+      font-weight: 600;
+    }
+
+    .form-switch .form-check-input {
+      width: 3rem;
+      height: 1.5rem;
+      cursor: pointer;
+    }
+
+    .form-switch .form-check-input:checked {
+      background-color: #0d6efd;
+      border-color: #0d6efd;
+    }
+
+    .login-card {
+      max-width: 400px;
+      width: 100%;
+    }
+
+    .input-imagen {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.input-imagen label {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+#btn-actualizar {
+  background-color: #2f9d58;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.oculto {
+  display: none;
+}
+
+#form-crear input[type="file"]:not(:first-of-type) {
+  display: none !important;
+}
+
+/* === Restaurar estilo del formulario de Gestión de Platillos === */
+#form-crear {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px;
+  background: #fafafa;
+  border-radius: 8px;
+}
+
+#form-crear input[type="text"],
+#form-crear input[type="number"],
+#form-crear textarea {
+  width: 100%;
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+#form-crear input[type="file"] {
+  margin-top: 4px;
+}
+
+#form-crear button {
+  background: #2f9d58;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 8px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+#form-crear button:hover {
+  background: #27884a;
+}

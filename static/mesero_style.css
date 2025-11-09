@@ -1,0 +1,56 @@
+/* static/css/mesero_style.css */
+:root {
+  --bg:#0f1316;
+  --panel:#16191c;
+  --muted:#9aa3aa;
+  --accent:#2f9d58;
+  --warning:#e0a800;
+  --danger:#d9534f;
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  color-scheme: dark;
+}
+body {
+  background:#0b0d0f;
+  color:#fff;
+  margin:0;
+}
+.app {
+  max-width:1200px;
+  margin:24px auto;
+  padding:22px;
+  display:grid;
+  grid-template-columns:1fr 420px;
+  gap:20px;
+}
+header {display:flex;justify-content:space-between;align-items:center}
+.mesas,.panel {
+  background:var(--panel);
+  border-radius:14px;
+  padding:18px;
+}
+.mesas-grid {display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.mesa {
+  padding:18px;
+  border-radius:12px;
+  text-align:center;
+  cursor:pointer;
+}
+.mesa.libre {background:green}
+.mesa.ocupado {background:red}
+.mesa.pedido {background:orange}
+.bottom-nav {
+  grid-column:1/3;
+  display:flex;
+  justify-content:space-around;
+  padding:10px;
+  background:#111;
+  border-radius:12px;
+}
+.btn {
+  background:var(--accent);
+  color:#fff;
+  border:none;
+  border-radius:10px;
+  padding:10px;
+  cursor:pointer;
+}

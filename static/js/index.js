@@ -164,17 +164,17 @@ if (datosForm) {
 //CARRITO DE COMPRAS
   let carrito = [];
 
-  window.agregarAlCarrito = function (id, nombre, precio) {
-    const productoExistente = carrito.find(p => p.id === id);
-    if (productoExistente) {
-      productoExistente.cantidad += 1;
-    } else {
-      carrito.push({ id, nombre, precio, cantidad: 1 });
-    }
-    actualizarCarrito();
-  };
+  window.agregarAlCarrito = function (id, nombre, precio, imagen) {
+  const productoExistente = carrito.find(p => p.id === id);
+  if (productoExistente) {
+    productoExistente.cantidad += 1;
+  } else {
+    carrito.push({ id, nombre, precio, imagen, cantidad: 1 });
+  }
+  actualizarCarrito();
+};
 
-  window.eliminarDelCarrito = function (id) {
+window.eliminarDelCarrito = function (id) {
   const producto = carrito.find(p => p.id === id);
   if (!producto) return;
 
@@ -189,22 +189,55 @@ if (datosForm) {
 function actualizarCarrito() {
   const lista = document.getElementById("carrito-lista");
   const totalEl = document.getElementById("total");
-  if (!lista || !totalEl) return;
+  const carritoLateral = document.getElementById("carrito-lateral");
+
+  if (!lista || !totalEl || !carritoLateral) return;
 
   lista.innerHTML = "";
   let total = 0;
 
   carrito.forEach(item => {
     total += item.precio * item.cantidad;
+
     const li = document.createElement("li");
+    li.className = "list-group-item d-flex align-items-center justify-content-between";
+
+    //Usa la ruta exacta de Django (ya guardada en BD)
+    const imgUrl = item.imagen
+      ? `/media/${item.imagen}`
+      : '/static/img/placeholder.png';
+
     li.innerHTML = `
-      ${item.nombre} x${item.cantidad} - $${(item.precio * item.cantidad).toFixed(2)}
-      <button onclick="eliminarDelCarrito(${item.id})">Eliminar</button>
+      <div class="d-flex align-items-center">
+        <img src="${imgUrl}" 
+             alt="${item.nombre}" 
+             width="60" height="60" 
+             class="me-3 rounded border"
+             onerror="this.src='/static/img/placeholder.png'">
+        <div>
+          <h6 class="mb-0">${item.nombre}</h6>
+          <small class="text-muted">
+            x${item.cantidad} — $${(item.precio * item.cantidad).toFixed(2)}
+          </small>
+        </div>
+      </div>
+      <button class="btn btn-sm btn-outline-danger" 
+              onclick="eliminarDelCarrito(${item.id})">
+        🗑️
+      </button>
     `;
+
     lista.appendChild(li);
   });
 
   totalEl.textContent = total.toFixed(2);
+
+  //Mostrar u ocultar carrito según haya productos
+  if (carrito.length > 0) {
+    carritoLateral.classList.remove("d-none");
+  } else {
+    carritoLateral.classList.add("d-none");
+  }
 }
 
 //CONFIRMAR PEDIDO 
@@ -293,7 +326,7 @@ fila.innerHTML = `
     ` : ""}
     ${isStaff ? `
       <button onclick="editarPlatillo(${p.id}, '${p.nombre}', '${p.descripcion || ""}', ${p.precio}, ${p.cantidad})">Editar</button>
-      <button onclick="eliminarPlatillo(${p.id})">Borrar</button>
+      
     ` : ""}
   </td>
 `;
@@ -309,16 +342,15 @@ const formCrear = document.getElementById("form-crear");
 if (formCrear) {
   formCrear.addEventListener("submit", async e => {
     e.preventDefault();
-    const datos = Object.fromEntries(new FormData(formCrear).entries());
-
+    // const datos = Object.fromEntries(new FormData(formCrear).entries());
+    const formData = new FormData(formCrear); //permite enviar imágenes
     try {
       const res = await fetch("/api/platillos/crear/", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
-          "X-CSRFToken": getCookie("csrftoken"),
+          "X-CSRFToken": getCookie("csrftoken"), //sin Content-Type
         },
-        body: JSON.stringify(datos),
+        body: formData, //FormData se envía directo, NO JSON
       });
 
       const data = await res.json();
@@ -336,6 +368,7 @@ if (formCrear) {
 }
 
 //editar
+//editar
 window.editarPlatillo = async function (id, nombre, descripcion, precio, cantidad) {
   const nuevoNombre = prompt("Nuevo nombre:", nombre);
   if (!nuevoNombre) return;
@@ -344,32 +377,78 @@ window.editarPlatillo = async function (id, nombre, descripcion, precio, cantida
   const nuevoPrecio = prompt("Nuevo precio:", precio);
   const nuevaCantidad = prompt("Nueva cantidad:", cantidad);
 
-  try {
-    const res = await fetch(`/api/platillos/${id}/editar/`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRFToken": getCookie("csrftoken"),
-      },
-      body: JSON.stringify({
-        nombre: nuevoNombre,
-        descripcion: nuevaDescripcion,
-        precio: nuevoPrecio,
-        cantidad: nuevaCantidad,
-      }),
-    });
+  //Crear input para elegir imagen (no bloquea con confirm/prompt)
+  const input = document.createElement("input");
+  input.type = "file";
+  input.accept = "image/*";
+  const formCrear = document.getElementById("form-crear");
+  formCrear.appendChild(input);
 
-    const data = await res.json();
-    if (data.success) {
-      alert("Platillo actualizado correctamente");
-      cargarPlatillos();
-    } else {
-      alert("Error al editar platillo: " + (data.error || ""));
+  input.addEventListener("change", async () => {
+    const file = input.files[0];
+    const formData = new FormData();
+    formData.append("nombre", nuevoNombre);
+    formData.append("descripcion", nuevaDescripcion);
+    formData.append("precio", nuevoPrecio);
+    formData.append("cantidad", nuevaCantidad);
+    if (file) formData.append("imagen", file);
+
+    try {
+      const res = await fetch(`/api/platillos/${id}/editar/`, {
+        method: "POST",
+        headers: { "X-CSRFToken": getCookie("csrftoken") },
+        body: formData,
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        alert("Platillo actualizado correctamente con nueva imagen");
+        cargarPlatillos();
+      } else {
+        alert("Error: " + (data.error || "")); 
+      }
+    } catch (err) {
+      console.error("Error al editar platillo:", err);
+    } finally {
+      input.remove(); // eliminar input del DOM
     }
-  } catch (err) {
-    console.error("Error al editar platillo:", err);
+  });
+
+  //Agregar pequeña pregunta visual antes de abrir el file dialog
+  const deseaCambiar = confirm("¿Deseas cambiar también la imagen del platillo?");
+  if (deseaCambiar) {
+    input.click(); // el click ahora sí se considera “user action”
+  } else {
+    //Si no cambia imagen → PUT normal
+    try {
+      const res = await fetch(`/api/platillos/${id}/editar/`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": getCookie("csrftoken"),
+        },
+        body: JSON.stringify({
+          nombre: nuevoNombre,
+          descripcion: nuevaDescripcion,
+          precio: nuevoPrecio, //corregido aquí
+          cantidad: nuevaCantidad,
+        }),
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        alert("Platillo actualizado correctamente");
+        cargarPlatillos();
+      } else {
+        alert("Error al editar platillo: " + (data.error || "")); 
+      }
+    } catch (err) {
+      console.error("Error al editar platillo:", err);
+    }
   }
 };
+
+
 
 //borrado
 window.eliminarPlatillo = async function (id) {
