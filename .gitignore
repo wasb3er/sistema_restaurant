@@ -1,9 +1,10 @@
 __pycache__/
 *.pyc
-
+*.sqlite3
 # Archivos de entorno
 .env
-
+backup.json
+packages/
 # Archivos de Docker
 *.pid
 *.log
