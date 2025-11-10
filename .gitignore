@@ -7,7 +7,7 @@ __pycache__/
 # Archivos de Docker
 *.pid
 *.log
-
+docker-compose.override.yml
 # Carpetas de Django
 /media/
 staticfiles/
