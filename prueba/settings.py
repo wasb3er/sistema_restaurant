@@ -14,6 +14,7 @@ from pathlib import Path
 from decouple import config
 import os
 import sys
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -79,6 +80,9 @@ WSGI_APPLICATION = 'prueba.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+CONN_MAX_AGE = int(config('CONN_MAX_AGE', default=0))
+PORT_DEFAULT = int(config('DB_PORT', cast=int, default=5432))
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -86,10 +90,9 @@ DATABASES = {
         'USER': config('DB_USER'),
         'PASSWORD': config('DB_PASSWORD'),
         'HOST': config('DB_HOST'),
-        'PORT': config('DB_PORT', cast=int, default=5432),
-        'OPTIONS': {
-            'sslmode': 'require',  #obligatorio en Supabase
-        },
+        'PORT': PORT_DEFAULT,
+        'CONN_MAX_AGE': CONN_MAX_AGE,
+        'OPTIONS': {'sslmode': 'require'},
     }
 }
 
