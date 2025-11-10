@@ -19,7 +19,9 @@ WORKDIR /app
 COPY requirements.txt .
 
 #Instalar dependencias de Python
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt \
+    --default-timeout=200 \
+    -i https://pypi.org/simple
 
 #Hacer copia de todo el proyecto
 COPY . .
