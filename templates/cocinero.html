@@ -1,0 +1,32 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel del Cocinero</title>
+  <link rel="stylesheet" href="{% static 'cook.css' %}">
+</head>
+<body>
+
+  <nav class="navbar">
+    <h1>🍽️ Panel del Cocinero</h1>
+    {% comment %} <button onclick="window.location.href='{% url 'login_general' %}'" class="btn-volver">Cerrar sesión</button> {% endcomment %}
+    <a href="{% url 'logout_por_rol' 'cocinero' %}" class="btn-volver">Cerrar sesión</a>
+  </nav>
+
+  <main class="layout">
+    <section class="card">
+      <h2>Pedidos en cocina</h2>
+      <div id="pendingList" class="order-list"></div>
+    </section>
+
+    <section class="card">
+      <h2>Pedidos listos</h2>
+      <div id="readyList" class="order-list"></div>
+    </section>
+  </main>
+
+  <script src="{% static 'js/cook.js' %}"></script>
+</body>
+</html>
