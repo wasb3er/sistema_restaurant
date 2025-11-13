@@ -24,6 +24,11 @@ class Platillo(models.Model):
 
 #pedido
 class Pedido(models.Model):
+    ESTADOS_PEDIDO = [
+        ('nuevo', 'Nuevo'),                    # Cliente lo crea
+        ('enviado_a_cocina', 'Enviado a Cocina'),  # Mesero lo aprueba
+        ('terminado', 'Terminado'),            # Cocina lo completa
+    ]
     nombre_cliente = models.CharField(max_length=100)
     personas = models.IntegerField(default=1)
     fecha = models.DateTimeField(auto_now_add=True)

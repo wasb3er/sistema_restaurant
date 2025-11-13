@@ -48,6 +48,7 @@ urlpatterns = [
 ##menu del administrador
     path('admin-menu/', views.admin_menu, name='admin_menu'),
     path('mesero_menu/', views.mesero_menu, name='mesero_menu'),
+    path('cocinero/', views.cocinero, name='cocina_menu'),
     path("crear_empleado/", views.crear_empleado, name="crear_empleado"),
 
 ##Ingreso de usuario, se debe crear un superusuario primero - cambiar por una creacion de usuario
@@ -58,8 +59,21 @@ urlpatterns = [
 ##ver pedidos, cambiar, eliminar - muestra un JSON como respuesta en url
     path('pedido/<int:pedido_id>/cambiar/', views.cambiar_estado_pedido, name='cambiar_estado_pedido'),
     path('pedido/<int:pedido_id>/eliminar/', views.eliminar_pedido, name='eliminar_pedido'),
-    path('pedido/<int:pedido_id>/', views.detalle_pedido, name='detalle_pedido'),
+    # path('pedido/<int:pedido_id>/', views.detalle_pedido, name='detalle_pedido'),
     path('pedidos/pendientes/', views.pedidos_pendientes, name='pedidos_pendientes'),
+    path('api/pedidos/pendientes/', views.pedidos_pendientes, name='pedidos_pendientes'),
+#MESERO API
+    path('api/pedidos/nuevos/', views.pedidos_nuevos_api, name='pedidos_nuevos_api'),
+    path('api/pedido/<int:pedido_id>/enviar_cocina/', views.enviar_a_cocina, name='enviar_a_cocina'),
+#MESERO - Ver pedidos listos
+path('api/pedidos/listos/', views.pedidos_listos_api, name='pedidos_listos_api'),
+
+#COCINERO API
+    path('api/pedidos/en_cocina/', views.pedidos_en_cocina_api, name='pedidos_en_cocina_api'),
+    path('api/pedido/<int:pedido_id>/marcar_listo/', views.marcar_listo, name='marcar_listo'),
+    path('api/pedido/<int:pedido_id>/volver_cocina/', views.volver_cocina, name='volver_cocina'),
+    path('api/pedido/<int:pedido_id>/marcar_entregado/', views.marcar_entregado, name='marcar_entregado'),
+    path('logout/<str:rol>/', views.logout_por_rol, name='logout_por_rol'),
 
 ]
 ##Lleva las imagenes para su uso en la parte frontal

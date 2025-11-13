@@ -144,7 +144,7 @@ STATICFILES_DIRS = [
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 #Redirecciones para pruebas - postman
-LOGIN_URL = '/login/'
+LOGIN_URL = '/login_general/'
 LOGIN_REDIRECT_URL = '/admin-menu/'
 LOGOUT_REDIRECT_URL = '/login/'
 
