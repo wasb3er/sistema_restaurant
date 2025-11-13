@@ -368,7 +368,6 @@ if (formCrear) {
 }
 
 //editar
-//editar
 window.editarPlatillo = async function (id, nombre, descripcion, precio, cantidad) {
   const nuevoNombre = prompt("Nuevo nombre:", nombre);
   if (!nuevoNombre) return;

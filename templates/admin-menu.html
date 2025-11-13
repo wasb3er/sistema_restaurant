@@ -9,14 +9,15 @@
 </head>
 <body>
 
-  <!-- NUEVO: Encabezado principal -->
+  <!--Encabezado principal-->
   <header class="admin-header">
     <h1>Panel del Administrador</h1>
     <div class="user-info">
        {{ request.session.empleado_nombre }}
       <form action="{% url 'logout' %}" method="post" style="display:inline;">
         {% csrf_token %}
-        <button type="submit" class="btn-logout">Cerrar sesión</button>
+        {% comment %} <button type="submit" class="btn-logout">Cerrar sesión</button> {% endcomment %}
+        <a href="{% url 'logout_por_rol' 'administrador' %}" class="btn-logout">Cerrar sesión</a>
       </form>
     </div>
   </header>

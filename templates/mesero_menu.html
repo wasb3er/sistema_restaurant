@@ -79,7 +79,8 @@
     </nav>
   </div>
   <div class="text-center mt-4">
-      <a href="{% url 'login_general' %}" class="btn btn-outline-secondary">Cerrar sesión</a>
+      {% comment %} <a href="{% url 'login_general' %}" class="btn btn-outline-secondary">Cerrar sesión</a> {% endcomment %}
+      <a href= "{% url 'logout_por_rol' 'mesero' %}" class="btn btn-outline-secondary">Cerrar sesión</a>
     </div>
 
   <script src="{% static 'js/mesero_script.js' %}"></script>

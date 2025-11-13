@@ -4,91 +4,81 @@
 <head>
   <meta charset="UTF-8">
   <title>Iniciar Sesión</title>
-
-  <!--Bootstrap-->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <!--Animaciones-->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
   <link rel="stylesheet" href="{% static 'style.css' %}">
 </head>
 <body>
+
+<!-- CAMBIO: se asegura que los mensajes de Django se muestren correctamente -->
 {% if messages %}
-  <div class="messages">
+  <div class="container mt-3">
     {% for message in messages %}
-      <div class="alert {{ message.tags }}">{{ message }}</div>
+      <div class="alert alert-warning text-center">{{ message }}</div>
     {% endfor %}
   </div>
 {% endif %}
-  <div class="login-container d-flex justify-content-center align-items-center vh-100">
-    <div class="card shadow-lg p-4 login-card animate__animated animate__fadeInDown">
-      <div class="text-center mb-4">
-        <h2 class="fw-bold text-yellow" id="login-title">Login de Administrador</h2>
-        <p class="text-muted">Ingresa tus credenciales</p>
-      </div>
 
-      {% if error %}
-        <div class="alert alert-danger text-center py-2">
-          {{ error }}
-        </div>
-      {% endif %}
+<div class="login-container d-flex justify-content-center align-items-center vh-100">
+  <div class="card shadow-lg p-4 login-card animate__animated animate__fadeInDown">
+    <div class="text-center mb-4">
+      <h2 class="fw-bold text-yellow" id="login-title">Login de Empleado</h2>
+      <p class="text-muted">Ingresa tus credenciales</p>
+    </div>
 
-      <!--Selector deslizable-->
-      <div class="switch-container">
-        <span class="switch-label">Empleado</span>
+    <form id="login-form" method="post" action="{% url 'login_general' %}">
+      {% csrf_token %}
+      <input type="hidden" id="tipoLogin" name="tipoLogin" value="empleado">
+
+      <div class="switch-container d-flex justify-content-center align-items-center mb-3">
+        <span class="me-2">Empleado</span>
         <div class="form-check form-switch">
           <input class="form-check-input" type="checkbox" id="rolSwitch">
         </div>
-        <span class="switch-label">Administrador</span>
+        <span class="ms-2">Administrador</span>
       </div>
 
-      <!--Formulario-->
-      <form id="login-form" method="post" action="{% url 'login_general' %}">
-        {% csrf_token %}
-        <input type="hidden" id="tipoLogin" name="tipoLogin" value="empleado">
+      <div class="mb-3">
+        <label class="form-label">Usuario</label>
+        <input type="text" name="username" class="form-control form-control-lg" placeholder="Ingresa tu usuario" required>
+      </div>
 
-        <div class="mb-3">
-          <label class="form-label">Usuario</label>
-          <input type="text" name="username" class="form-control form-control-lg" placeholder="Ingresa tu usuario" required>
-        </div>
+      <div class="mb-4">
+        <label class="form-label">Contraseña</label>
+        <input type="password" name="password" class="form-control form-control-lg" placeholder="••••••••" required>
+      </div>
 
-        <div class="mb-4">
-          <label class="form-label">Contraseña</label>
-          <input type="password" name="password" class="form-control form-control-lg" placeholder="••••••••" required>
-        </div>
-
-        <div class="d-grid">
-          <button type="submit" class="btn btn-black btn-lg boton-login">Iniciar Sesión</button>
-        </div>
-      </form>
-    </div>
+      <div class="d-grid">
+        <button type="submit" class="btn btn-black btn-lg boton-login">Iniciar Sesión</button>
+      </div>
+    </form>
   </div>
+</div>
 
-  <div class="text-center mt-3">
-    <button onclick="window.location.href='/'" class="btn btn-outline-secondary">Volver</button>
-  </div>
+<div class="text-center mt-3">
+  <button onclick="window.location.href='/'" class="btn btn-outline-secondary">Volver</button>
+</div>
 
-  <script>
-  //Cambiar entre modo admin y empleado
-  const rolSwitch = document.getElementById('rolSwitch');
-  const titulo = document.getElementById('login-title');
-  const tipoLoginInput = document.getElementById('tipoLogin');
+<script>
+// CAMBIO: Se corrigió el control del switch para alternar el tipoLogin entre empleado/admin
+const rolSwitch = document.getElementById('rolSwitch');
+const titulo = document.getElementById('login-title');
+const tipoLoginInput = document.getElementById('tipoLogin');
 
-  //Valor inicial: Empleado
-  rolSwitch.checked = false;
-  titulo.textContent = "Login de Empleado";
-  tipoLoginInput.value = "empleado";
+rolSwitch.checked = false;
+tipoLoginInput.value = "empleado";
 
-  rolSwitch.addEventListener('change', () => {
-    if (rolSwitch.checked) {
-      titulo.textContent = "Login de Administrador";
-      tipoLoginInput.value = "admin";
-    } else {
-      titulo.textContent = "Login de Empleado";
-      tipoLoginInput.value = "empleado";
-    }
-  });
+rolSwitch.addEventListener('change', () => {
+  if (rolSwitch.checked) {
+    titulo.textContent = "Login de Administrador";
+    tipoLoginInput.value = "admin";
+  } else {
+    titulo.textContent = "Login de Empleado";
+    tipoLoginInput.value = "empleado";
+  }
+});
 </script>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
