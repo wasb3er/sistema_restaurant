@@ -184,7 +184,7 @@ h2{ margin-bottom: 12px; }
 }
 
 
-/* -------------------- MENU PRINCIPAL - PARA DISPOSITIVOS MOVILES -------------------- */
+/*MENU PRINCIPAL - PARA DISPOSITIVOS MOVILES*/
 #menu {
   display: none; /*oculto al inicio*/
   margin-top: 20px;
@@ -320,7 +320,7 @@ h2{ margin-bottom: 12px; }
   }
 }
 
-/* 🎯 Carrito lateral fijo */
+/*Carrito lateral fijo */
 .carrito-lateral {
   width: 25%;                 /* ocupa un 25% del ancho */
   right: 0;                   /* se alinea a la derecha */
@@ -517,7 +517,7 @@ h2{ margin-bottom: 12px; }
   display: none !important;
 }
 
-/* === Restaurar estilo del formulario de Gestión de Platillos === */
+/*Restaurar estilo del formulario de Gestión de Platillos*/
 #form-crear {
   display: flex;
   flex-direction: column;
