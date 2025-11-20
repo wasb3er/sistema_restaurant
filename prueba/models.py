@@ -33,8 +33,8 @@ class Pedido(models.Model):
     personas = models.IntegerField(default=1)
     fecha = models.DateTimeField(auto_now_add=True)
     total = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    estado = models.CharField(max_length=20, default='pendiente')
-
+    estado = models.CharField(max_length=20, choices=ESTADOS_PEDIDO, default='nuevo')
+    mesa = models.ForeignKey("Mesa", on_delete=models.SET_NULL, null=True, blank=True)
     class Meta:
         db_table = 'pedido'
         managed = False          #Tabla creada manualmente
@@ -97,3 +97,18 @@ class Empleado(models.Model):
     #Verifica la contraseña ingresada con la cifrada
     def check_password(self, raw_password):
         return check_password(raw_password, self.password)
+    
+#Modelo de mesa
+class Mesa(models.Model):
+    id = models.AutoField(primary_key=True)
+    numero = models.IntegerField()
+    estado = models.CharField(max_length=20)
+    capacidad = models.IntegerField(null=True, blank=True)
+    updated_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        db_table = 'mesas'
+        managed = False
+
+    def __str__(self):
+        return f"Mesa {self.numero}"

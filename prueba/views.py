@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse, HttpResponse
-from .models import Platillo, DetallePedido, Pedido, Empleado
+from .models import Platillo, DetallePedido, Pedido, Empleado, Mesa
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from django.views.decorators.http import require_POST
 from django.contrib.auth import authenticate, login
@@ -10,7 +10,28 @@ from functools import wraps
 from django.contrib.sessions.backends.db import SessionStore
 from django.utils.timezone import localtime
 import json
+from PIL import Image
+from io import BytesIO
+from django.core.files.base import ContentFile
 
+import openpyxl
+from openpyxl.styles import Font, Alignment
+from django.http import HttpResponse
+
+#Para la resolución de imagen
+def redimensionar_imagen(imagen, ancho=612, alto=408):
+    """Redimensiona cualquier imagen a 612x408 manteniendo calidad."""
+    img = Image.open(imagen)
+
+    # Convertir a RGB si viene en PNG con alpha
+    if img.mode in ("RGBA", "P"):
+        img = img.convert("RGB")
+
+    img = img.resize((ancho, alto), Image.Resampling.LANCZOS)
+
+    buffer = BytesIO()
+    img.save(buffer, format="JPEG", quality=90)
+    return ContentFile(buffer.getvalue())
 
 # CAMBIO: se normaliza comparación de roles (minúsculas, sin espacios)
 def rol_requerido(rol_permitido):
@@ -60,6 +81,24 @@ def menu_view(request):
 def crear_pedido(request):
     try:
         data = json.loads(request.body)
+
+        # 1) VALIDAR QUE LLEGUE mesa_id
+        mesa_raw = data.get('mesa_id')
+        if mesa_raw is None or mesa_raw == "" or mesa_raw == "null":
+            return JsonResponse({"success": False, "error": "ID de mesa no enviado"})
+
+        # 2) CONVERTIR A ENTERO CON TRY
+        try:
+            mesa_id = int(mesa_raw)
+        except:
+            return JsonResponse({"success": False, "error": "ID de mesa inválido"})
+
+        # 3) BUSCAR LA MESA CORRECTAMENTE
+        try:
+            mesa = Mesa.objects.get(numero=mesa_id)
+        except Mesa.DoesNotExist:
+            return JsonResponse({"success": False, "error": "Mesa no encontrada"})
+
         nombre = data.get('nombre')
         personas = data.get('personas')
         platillos = data.get('platillos')
@@ -67,9 +106,11 @@ def crear_pedido(request):
         if not platillos:
             return JsonResponse({'success': False, 'error': 'El carrito está vacío'})
 
+        # Crear pedido
         pedido = Pedido.objects.create(
             nombre_cliente=nombre,
             personas=personas,
+            mesa=mesa,
             total=0,
             estado='nuevo'
         )
@@ -79,22 +120,41 @@ def crear_pedido(request):
             platillo = Platillo.objects.get(pk=item['id'])
             cantidad = int(item.get('cantidad', 1))
 
-            if platillo.cantidad < cantidad:
-                return JsonResponse({'success': False, 'error': f"No hay suficiente stock de {platillo.nombre}"})
+            if cantidad > platillo.cantidad:
+                return JsonResponse({
+                    'success': False,
+                    'error': f'Solo quedan {platillo.cantidad} unidades de {platillo.nombre}'
+                })
 
             subtotal = platillo.precio * cantidad
-            DetallePedido.objects.create(pedido=pedido, platillo=platillo, cantidad=cantidad, subtotal=subtotal)
+
+            DetallePedido.objects.create(
+                pedido=pedido,
+                platillo=platillo,
+                cantidad=cantidad,
+                subtotal=subtotal
+            )
+
             platillo.cantidad -= cantidad
             platillo.save()
+
             total += subtotal
 
         pedido.total = total
         pedido.save()
-        return JsonResponse({'success': True, 'pedido_id': pedido.id, 'total': float(total), 'estado': pedido.estado})
+
+        return JsonResponse({
+            'success': True,
+            'pedido_id': pedido.id,
+            'total': float(total),
+            'estado': pedido.estado,
+            'mesa_id': mesa.id
+        })
 
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)})
 
+    
 
 # CRUD DE PLATILLOS
 @csrf_exempt
@@ -107,17 +167,25 @@ def crear_platillo(request):
             cantidad = request.POST.get('cantidad', 0)
             imagen = request.FILES.get('imagen')
 
-            Platillo.objects.create(
+            nuevo_platillo = Platillo(
                 nombre=nombre,
                 descripcion=descripcion,
                 precio=precio,
-                cantidad=cantidad,
-                imagen=imagen
+                cantidad=cantidad
             )
+            # Si subieron una imagen: redimensionarla
+            if imagen:
+                imagen_redimensionada = redimensionar_imagen(imagen)
+                nuevo_platillo.imagen.save(imagen.name, imagen_redimensionada, save=False)
+
+            nuevo_platillo.save()
             return JsonResponse({'success': True})
+
         except Exception as e:
             return JsonResponse({'success': False, 'error': str(e)})
+
     return JsonResponse({'success': False, 'error': 'Método no permitido'}, status=405)
+
 
 
 def listar_platillos(request):
@@ -128,33 +196,39 @@ def listar_platillos(request):
 @csrf_exempt
 def editar_platillo(request, id):
     try:
+        if request.method != "POST":
+            return JsonResponse({"success": False, "error": "Método no permitido"}, status=405)
+
         platillo = get_object_or_404(Platillo, id=id)
 
-        if request.method == "PUT":
-            data = json.loads(request.body)
-            platillo.nombre = data.get("nombre", platillo.nombre)
-            platillo.descripcion = data.get("descripcion", platillo.descripcion)
-            platillo.precio = data.get("precio", platillo.precio)
-            platillo.cantidad = data.get("cantidad", platillo.cantidad)
-            platillo.save()
-            return JsonResponse({"success": True})
+        # Actualizar campos
+        platillo.nombre = request.POST.get("nombre", platillo.nombre)
+        platillo.descripcion = request.POST.get("descripcion", platillo.descripcion)
 
-        elif request.method == "POST":
-            platillo.nombre = request.POST.get("nombre", platillo.nombre)
-            platillo.descripcion = request.POST.get("descripcion", platillo.descripcion)
-            platillo.precio = request.POST.get("precio", platillo.precio)
-            platillo.cantidad = request.POST.get("cantidad", platillo.cantidad)
+        # Convertir precio y cantidad (evita errores si vienen vacíos)
+        precio = request.POST.get("precio")
+        cantidad = request.POST.get("cantidad")
 
-            if 'imagen' in request.FILES:
-                platillo.imagen = request.FILES['imagen']
+        if precio:
+            platillo.precio = float(precio)
 
-            platillo.save()
-            return JsonResponse({"success": True})
+        if cantidad:
+            platillo.cantidad = int(cantidad)
 
-        return JsonResponse({"success": False, "error": "Método no permitido"}, status=405)
+        # Si llega una imagen nueva, reemplazarla
+        if "imagen" in request.FILES:
+            imagen_original = request.FILES["imagen"]
+            imagen_redimensionada = redimensionar_imagen(imagen_original)
+            platillo.imagen.save(imagen_original.name, imagen_redimensionada, save=False)
+
+        platillo.save()
+
+        return JsonResponse({"success": True})
 
     except Exception as e:
-        return JsonResponse({"success": False, "error": str(e)})
+        return JsonResponse({"success": False, "error": str(e)}, status=500)
+
+
 
 
 @csrf_exempt
@@ -175,12 +249,15 @@ def admin_menu(request):
     platillos = Platillo.objects.all()
     empleados = Empleado.objects.all()
     pedidos = Pedido.objects.all()
-    return render(request, 'admin-menu.html', {
+    return render(request, 'admin/admin-menu.html', {
         'platillos': platillos,
         'empleados': empleados,
         'pedidos': pedidos,
     })
 
+@rol_requerido("administrador")
+def admin_reportes(request):
+    return render(request, "admin/reportes.html")
 
 # CAMBIO: eliminado @login_required
 @rol_requerido("administrador")
@@ -303,21 +380,20 @@ def mesero_menu(request):
 
 
 #eliminado @login_required
+@csrf_exempt
 @rol_requerido("administrador")
 def crear_empleado(request):
-    if request.method == 'POST':
-        nombre = request.POST.get('nombre')
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        rol = request.POST.get('rol', 'Mesero')
+    if request.method == "POST":
+        nombre = request.POST.get("nombre")
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+        rol = request.POST.get("rol", "Mesero")
 
         if not nombre or not username or not password:
-            messages.error(request, "Faltan datos requeridos.")
-            return redirect('admin_menu')
+            return JsonResponse({"success": False, "error": "Faltan datos obligatorios"})
 
         if Empleado.objects.filter(username=username).exists():
-            messages.warning(request, f"El usuario '{username}' ya existe.")
-            return redirect('admin_menu')
+            return JsonResponse({"success": False, "error": "El usuario ya existe"})
 
         nuevo = Empleado(
             nombre=nombre,
@@ -327,10 +403,13 @@ def crear_empleado(request):
             activo=True
         )
         nuevo.save()
-        messages.success(request, f"Empleado '{nombre}' agregado correctamente.")
-        return redirect('admin_menu')
 
-    return redirect('admin_menu')
+        return JsonResponse({
+            "success": True,
+            "message": f"Empleado '{nombre}' agregado correctamente."
+        })
+
+    return JsonResponse({"success": False, "error": "Método no permitido"}, status=405)
 
 
 
@@ -449,3 +528,220 @@ def marcar_entregado(request, pedido_id):
         return JsonResponse({"success": False, "error": "Pedido no encontrado."})
     except Exception as e:
         return JsonResponse({"success": False, "error": str(e)})
+    
+
+def mesas_api(request):
+    try:
+        mesas = Mesa.objects.all()
+        data = []
+
+        for mesa in mesas:
+            pedido = Pedido.objects.filter(mesa=mesa).exclude(estado="entregado").first()
+
+            # Intentar extraer mesero (solo si el modelo tiene el campo)
+            mesero_nombre = None
+            if pedido:
+                if hasattr(pedido, "empleado") and pedido.empleado:
+                    mesero_nombre = getattr(pedido.empleado, "nombre", None)
+
+            mesa_info = {
+                "id": mesa.id,
+                "numero": mesa.numero,
+                "estado": mesa.estado,
+                "mesero": mesero_nombre,
+                "pedido": None
+            }
+            if pedido:
+                mesa_info["pedido"] = {
+                    "id": pedido.id,
+                    "cliente": getattr(pedido, "nombre_cliente", None),
+                    "personas": getattr(pedido, "personas", None),
+                    "estado": pedido.estado,
+                    "total": pedido.total,
+                    "fecha": pedido.fecha.strftime("%Y-%m-%d %H:%M:%S"),
+                }
+
+            data.append(mesa_info)
+
+        return JsonResponse({"mesas": data})
+
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
+
+
+def pedido_por_mesa_api(request, mesa_id):
+    try:
+        mesa = Mesa.objects.get(pk=mesa_id)
+        pedido = Pedido.objects.filter(mesa_id=mesa_id).order_by('-fecha').first()
+
+        if not pedido:
+            return JsonResponse({
+                "mesa": {
+                    "id": mesa.id,
+                    "numero": mesa.numero,
+                },
+                "pedido": None
+            })
+
+        return JsonResponse({
+            "mesa": {
+                "id": mesa.id,
+                "numero": mesa.numero,
+            },
+            "pedido": {
+                "id": pedido.id,
+                "cliente": pedido.nombre_cliente,
+                "personas": pedido.personas,
+                "total": float(pedido.total),
+                "estado": pedido.estado,
+                "fecha": pedido.fecha.strftime("%Y-%m-%d %H:%M:%S")
+            }
+        })
+
+    except Mesa.DoesNotExist:
+        return JsonResponse({"error": "Mesa no existe"}, status=404)
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
+
+def api_pedidos(request):
+    try:
+        pedidos = Pedido.objects.order_by('-id')
+
+        data = []
+
+        for p in pedidos:
+            # Fecha segura
+            fecha = None
+            if hasattr(p, "fecha") and p.fecha:
+                try:
+                    fecha = p.fecha.strftime("%Y-%m-%d %H:%M:%S")
+                except:
+                    fecha = None
+
+            data.append({
+                "id": p.id,
+                "cliente": getattr(p, "nombre_cliente", "N/A") or "N/A",
+                "personas": getattr(p, "personas", 0) or 0,
+                "total": float(getattr(p, "total", 0) or 0),
+                "estado": getattr(p, "estado", "N/A"),
+                "fecha": fecha,
+            })
+
+        return JsonResponse({"pedidos": data})
+
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
+
+
+def api_platillos(request):
+    platillos = Platillo.objects.all()
+    data = [{
+        "id": p.id,
+        "nombre": p.nombre,
+        "descripcion": p.descripcion,
+        "precio": float(p.precio),
+        "cantidad": p.cantidad,
+    } for p in platillos]
+
+    return JsonResponse(data, safe=False)
+
+@csrf_exempt
+def toggle_empleado_activo(request, empleado_id):
+    try:
+        empleado = get_object_or_404(Empleado, id=empleado_id)
+
+        # Invertir el estado
+        empleado.activo = not empleado.activo
+        empleado.save()
+
+        return JsonResponse({
+            "success": True,
+            "activo": empleado.activo,
+            "message": "Empleado actualizado correctamente"
+        })
+    except Exception as e:
+        return JsonResponse({"success": False, "error": str(e)})
+
+
+@rol_requerido("administrador")
+def reporte_ventas_excel(request):
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.title = "Ventas"
+
+    # Encabezados
+    headers = ["ID Pedido", "Cliente", "Personas", "Total", "Estado", "Fecha"]
+    ws.append(headers)
+
+    for cell in ws[1]:
+        cell.font = Font(bold=True)
+        cell.alignment = Alignment(horizontal="center")
+
+    pedidos = Pedido.objects.order_by("-fecha")
+
+    for p in pedidos:
+        ws.append([
+            p.id,
+            p.nombre_cliente,
+            p.personas,
+            float(p.total),
+            p.estado,
+            p.fecha.strftime("%Y-%m-%d %H:%M")
+        ])
+
+    # Preparar respuesta
+    response = HttpResponse(
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
+    response['Content-Disposition'] = 'attachment; filename="reporte_ventas.xlsx"'
+
+    wb.save(response)
+    return response
+
+@rol_requerido("administrador")
+def reporte_platillos_excel(request):
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.title = "Platillos"
+
+    headers = ["Platillo", "Total Vendido", "Ingresos Generados"]
+    ws.append(headers)
+
+    for cell in ws[1]:
+        cell.font = Font(bold=True)
+        cell.alignment = Alignment(horizontal="center")
+
+    platillos = Platillo.objects.all()
+
+    for pl in platillos:
+        detalles = DetallePedido.objects.filter(platillo=pl)
+        total_vendido = sum(d.cantidad for d in detalles)
+        ingresos = sum(float(d.subtotal) for d in detalles)
+
+        ws.append([pl.nombre, total_vendido, ingresos])
+
+    response = HttpResponse(
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
+    response['Content-Disposition'] = 'attachment; filename="reporte_platillos.xlsx"'
+
+    wb.save(response)
+    return response
+
+
+#Asignar mesero
+# @csrf_exempt
+# def asignar_mesero(request, mesa_id):
+#     try:
+#         data = json.loads(request.body)
+#         mesero_id = data.get("mesero_id")
+
+#         mesa = Mesa.objects.get(pk=mesa_id)
+#         mesero = Empleado.objects.get(pk=mesero_id, rol="Mesero")
+
+#         mesa.mesero = mesero
+#         mesa.save()
+
+#         return JsonResponse({"success": True})
+#     except Exception as e:
+#         return JsonResponse({"success": False, "error": str(e)}, status=500)
