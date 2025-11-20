@@ -1,0 +1,62 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administrador</title>
+    <link rel="stylesheet" href="{% static 'admin_panel.css' %}">
+</head>
+
+<body>
+
+<!-- ALERTA GLOBAL -->
+<div id="alertBox" class="alert-box hidden"></div>
+
+<div class="admin-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <h2 class="logo">🍽 Admin</h2>
+
+        <nav>
+            <button class="nav-btn active" data-view="platillos">Platillos</button>
+            <button class="nav-btn" data-view="pedidos">Pedidos</button>
+            <button class="nav-btn" data-view="empleados">Empleados</button>
+            <button class="nav-btn" data-view="reportes">Reportes</button>
+        </nav>
+
+        <div class="sidebar-footer">
+            <span>{{ request.session.empleado_nombre }}</span>
+            <a href="{% url 'logout_por_rol' 'administrador' %}" class="logout">Cerrar sesión</a>
+        </div>
+    </aside>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="content">
+
+        <!-- Vista: Platillos -->
+        <section id="view-platillos" class="view active">
+            {% include 'admin/gestion_platillos.html' %}
+        </section>
+
+        <!-- Vista: Pedidos -->
+        <section id="view-pedidos" class="view">
+            {% include 'admin/gestion_pedidos.html' %}
+        </section>
+
+        <!-- Vista: Empleados -->
+        <section id="view-empleados" class="view">
+            {% include 'admin/gestion_empleados.html' %}
+        </section>
+
+        <section id="view-reportes" class="view">
+        {% include 'admin/reportes.html' %}
+        </section>
+    </main>
+
+</div>
+<script src="{% static 'js/admin_panel.js' %}"></script>
+
+</body>
+</html>

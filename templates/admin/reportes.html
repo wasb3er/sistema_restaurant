@@ -1,0 +1,13 @@
+<h2>Reportes del Restaurante</h2>
+
+<div class="card">
+    <h3>Reporte de Ventas</h3>
+    <p>Exporta un archivo Excel con todas las ventas registradas.</p>
+    <a href="{% url 'reporte_ventas_excel' %}" class="btn-primary">Descargar Excel</a>
+</div>
+
+<div class="card">
+    <h3>Reporte de Platillos</h3>
+    <p>Genera un Excel con el total vendido por cada platillo.</p>
+    <a href="{% url 'reporte_platillos_excel' %}" class="btn-primary">Descargar Excel</a>
+</div>

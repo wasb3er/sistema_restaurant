@@ -1,0 +1,44 @@
+<h2>Panel de Pedidos</h2>
+
+<div class="card">
+
+{% if pedidos %}
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Cliente</th>
+            <th>Personas</th>
+            <th>Total</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for pedido in pedidos %}
+        <tr>
+            <td>{{ pedido.id }}</td>
+            <td>{{ pedido.nombre_cliente }}</td>
+            <td>{{ pedido.personas }}</td>
+            <td>${{ pedido.total }}</td>
+            <td>{{ pedido.estado }}</td>
+
+            <!-- SOLO botón Cambiar, sin texto duplicado -->
+            <td>
+                <button class="btn-small btn-cambiar" data-id="{{ pedido.id }}">
+                    Cambiar
+                </button>
+            </td>
+
+        </tr>
+        {% endfor %}
+    </tbody>
+
+</table>
+
+{% else %}
+<p>No hay pedidos registrados.</p>
+{% endif %}
+
+</div>

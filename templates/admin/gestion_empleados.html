@@ -1,0 +1,78 @@
+<h2>Gestión de Empleados</h2>
+
+<!-- ALERTA GLOBAL -->
+<div id="alertBox" class="alert-box hidden"></div>
+
+<button id="addEmployeeBtn" class="btn-primary">+ Agregar Mesero</button>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Usuario</th>
+            <th>Rol</th>
+            <th>Activo</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for e in empleados %}
+        <tr>
+            <td>{{ e.nombre }}</td>
+            <td>{{ e.username }}</td>
+            <td>{{ e.rol }}</td>
+
+            <!-- BOTÓN ACTIVO / INACTIVO -->
+            <td>
+                <button 
+                    class="toggle-btn {{ e.activo|yesno:'activo,inactivo' }}" 
+                    data-id="{{ e.id }}">
+                    {{ e.activo|yesno:"Sí,No" }}
+                </button>
+            </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4">No hay empleados registrados</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+<!-- MODAL PARA AGREGAR EMPLEADO -->
+<div id="employeeModal" class="modal hidden">
+  <div class="modal-content form-card">
+    <h3 class="modal-title">Agregar nuevo empleado</h3>
+
+    <form id="employeeForm" method="post" action="{% url 'crear_empleado' %}">
+      {% csrf_token %}
+
+      <div class="form-group">
+        <label>Nombre completo</label>
+        <input type="text" name="nombre" class="input-field" required>
+      </div>
+
+      <div class="form-group">
+        <label>Usuario</label>
+        <input type="text" name="username" class="input-field" required>
+      </div>
+
+      <div class="form-group">
+        <label>Contraseña</label>
+        <input type="password" name="password" class="input-field" required>
+      </div>
+
+      <div class="form-group">
+        <label>Rol</label>
+        <select name="rol" class="input-field" required>
+          <option value="Mesero">Mesero</option>
+          <option value="Cocinero">Cocinero</option>
+        </select>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn-secondary" id="closeModal">Cancelar</button>
+        <button type="submit" class="btn-primary">Guardar</button>
+      </div>
+
+    </form>
+  </div>
+</div>

@@ -1,0 +1,53 @@
+<h2>Gestión de Platillos</h2>
+
+<div class="card">
+
+    <form id="form-crear" enctype="multipart/form-data" class="form-platillos">
+
+        <div class="form-row">
+            <input type="text" name="nombre" placeholder="Nombre" required>
+            <input type="text" name="descripcion" placeholder="Descripción">
+        </div>
+
+        <div class="form-row">
+            <input type="number" name="precio" placeholder="Precio" step="0.01" required>
+            <input type="number" name="cantidad" placeholder="Cantidad" required>
+        </div>
+
+        <div class="image-upload-box">
+    <label for="imagen" class="image-label">
+        <i class="fa fa-image"></i> Seleccionar imagen
+    </label>
+    
+    <input type="file" id="imagen" name="imagen" accept="image/*">
+
+    <!-- Vista previa -->
+    <img id="preview-img" class="preview-img" src="" alt="Vista previa" style="display:none;">
+</div>
+
+        <div class="form-actions">
+            <button type="submit" id="btn-agregar" class="btn-primary">Agregar Platillo</button>
+            <button type="button" id="btn-actualizar" class="btn-secondary oculto">Actualizar Platillo</button>
+        </div>
+
+    </form>
+
+</div>
+
+<div class="card">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Precio</th>
+                <th>Cantidad</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+
+        <tbody id="tabla-platillos">
+            <!-- El JS llenará esto -->
+        </tbody>
+    </table>
+</div>
