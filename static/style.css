@@ -1,5 +1,5 @@
 body{
-    background-color: rgb(255, 255, 255);
+    background-color: #f8f1e7 !important;
     text-align: center;
 }
 
@@ -553,4 +553,510 @@ h2{ margin-bottom: 12px; }
 
 #form-crear button:hover {
   background: #27884a;
+}
+
+#btnIrMenu {
+  display: none;
+}
+
+/* ----- TÍTULO ----- */
+.menu-title {
+    text-align: center;
+    font-size: 2.5rem;
+    margin: 40px 0;
+    font-weight: 700;
+    color: #2b2b2b;
+}
+
+/* ----- GRID DE TARJETAS ----- */
+.menu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+    gap: 30px;
+    padding: 20px 40px;
+}
+
+/* ----- TARJETA ----- */
+.menu-card {
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0px 6px 20px rgba(0,0,0,0.09);
+    overflow: hidden;
+    transition: transform 0.25s, box-shadow 0.25s;
+}
+
+.menu-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 10px 28px rgba(0,0,0,0.14);
+}
+
+/* ----- IMAGEN ----- */
+.menu-img {
+    width: 100%;
+    height: 260px;
+    object-fit: cover;
+}
+
+/* ----- CONTENIDO ----- */
+.menu-info {
+    padding: 20px;
+}
+
+.menu-name {
+    font-size: 1.35rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+.menu-desc {
+    font-size: 0.95rem;
+    color: #666;
+    margin-bottom: 15px;
+    min-height: 40px;
+}
+
+.menu-meta {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.menu-price {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #c07a2c;
+}
+
+.menu-stock {
+    font-size: 0.9rem;
+    color: #777;
+}
+
+/* ----- BOTÓN AGREGAR ----- */
+.btn-agregar {
+    width: 100%;
+    background: #1f1f1f;
+    border: none;
+    color: #fff;
+    padding: 12px;
+    font-size: 1rem;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.25s;
+}
+
+.btn-agregar:hover {
+    background: #c07a2c;
+}
+
+/* Sidebar del carrito */
+.carrito-sidebar {
+    background: #fff;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    right: 0;
+    border-left: 1px solid #ddd;
+    z-index: 2000;
+}
+
+/* Para que las cartas no se tapen con el carrito */
+@media (min-width: 992px) {
+    .col-lg-9 {
+        padding-right: 320px !important;
+    }
+}
+
+/* Para móviles → carrito abajo */
+@media (max-width: 991px) {
+    .carrito-sidebar {
+        position: relative;
+        height: auto;
+        border-left: none;
+        margin-top: 30px;
+    }
+}
+
+/* --- TARJETAS --- */
+.menu-card {
+    background: white;
+    border-radius: 15px;
+    padding: 15px;
+    text-align: center;
+}
+
+.menu-img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+.menu-title {
+    font-size: 1.3rem;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.menu-desc {
+    color: #777;
+    font-size: 0.9rem;
+    height: 45px;
+}
+
+.menu-info {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 10px;
+}
+
+.menu-price {
+    color: #d48a00;
+    font-weight: bold;
+}
+
+.menu-btn {
+    margin-top: 10px;
+    background: #111;
+    color: white;
+    padding: 10px;
+    border-radius: 10px;
+    width: 100%;
+    border: none;
+}
+
+/* --- NAVBAR --- */
+.cart-icon-container {
+    background: #eee;
+    padding: 7px 12px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.cart-total {
+    font-weight: bold;
+    margin-right: 8px;
+}
+
+.cart-icon {
+    width: 22px;
+}
+
+/* --- PANEL DESLIZANTE --- */
+.carrito-panel {
+    width: 350px;
+    background: white;
+    position: fixed;
+    top: 0;
+    right: -400px;
+    height: 100vh;
+    padding: 20px;
+    box-shadow: -3px 0 10px rgba(0,0,0,0.15);
+    transition: right .3s ease;
+    z-index: 2000;
+}
+
+.carrito-panel.open {
+    right: 0;
+}
+
+.carrito-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    backdrop-filter: blur(3px);
+    opacity: 0;
+    pointer-events: none;
+    transition: .3s;
+    z-index: 1500;
+}
+
+.carrito-overlay.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Header del carrito */
+.carrito-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+/* ===========================
+   ESTILO DEL MENÚ (igual al INDEX)
+   =========================== */
+
+/* Fondo general */
+body {
+    background-color: #f8f1e7 !important;
+}
+
+/* NAVBAR estilo INDEX */
+.navbar {
+    background-color: #e9dbc7 !important;
+    padding: 12px 24px;
+    border-bottom: 1px solid #d7c7b4;
+}
+
+.navbar a {
+    font-weight: 700;
+    color: #3b2f2f !important;
+    text-decoration: none;
+}
+
+.navbar a:hover {
+    opacity: 0.7;
+}
+
+/* Icono del carrito igual al estilo INDEX */
+.cart-icon-container {
+    background: #f3e7d8 !important;
+    border: 1px solid #c9b8a3;
+    padding: 6px 10px;
+    border-radius: 10px;
+}
+
+.cart-icon {
+    width: 22px;
+}
+
+/* Título del menú */
+h3.fw-bold {
+    color: #3b2f2f !important;
+}
+
+/* ===========================
+   TARJETAS DEL MENÚ
+   =========================== */
+.menu-card {
+    background: #fffaf2 !important;
+    border-radius: 18px;
+    border: 1px solid #e2d2c3;
+    box-shadow: 0px 6px 20px rgba(0,0,0,0.06);
+    transition: transform .25s, box-shadow .25s;
+}
+
+.menu-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 12px 28px rgba(0,0,0,0.15);
+}
+
+/* Imagen */
+.menu-img {
+    border-radius: 16px;
+}
+
+/* Nombre del platillo */
+.menu-title,
+.menu-name {
+    color: #4a3a32 !important;
+    font-weight: 700 !important;
+}
+
+/* Descripción */
+.menu-desc {
+    color: #6e5b52 !important;
+}
+
+/* Precio */
+.menu-price {
+    color: #b8793e !important;
+    font-weight: bold;
+}
+
+/* Disponibilidad */
+.menu-stock {
+    color: #7a6e60 !important;
+}
+
+/* ===========================
+   BOTÓN AGREGAR
+   =========================== */
+.menu-btn {
+    background: #3b2f2f !important;
+    color: #ffffff !important;
+    border-radius: 10px;
+    padding: 12px;
+    font-size: 1rem;
+    border: none;
+    transition: background .3s;
+}
+
+.menu-btn:hover {
+    background: #b8793e !important;
+}
+
+/* ===========================
+   PANEL DESLIZANTE CARRITO
+   =========================== */
+.carrito-panel {
+    background: #fffaf2 !important;
+    border-left: 2px solid #d6c4b5;
+}
+
+.carrito-header h4 {
+    color: #4a3a32;
+}
+
+.list-group-item {
+    background-color: #f8f1e7 !important;
+    border: none;
+}
+
+/* Overlay */
+.carrito-overlay {
+    backdrop-filter: blur(2px);
+}
+
+/* ===========================
+   BOTÓN "VOLVER AL INICIO"
+   =========================== */
+.btn-outline-secondary {
+    border-color: #7a6e60 !important;
+    color: #4a3a32 !important;
+}
+
+.btn-outline-secondary:hover {
+    background: #7a6e60 !important;
+    color: white !important;
+}
+
+
+/* ------------------------------
+   NAVBAR UNIFICADA (MENÚ + INDEX)
+------------------------------ */
+
+.navbar {
+    width: 100%;
+    background: #e9dbc7;
+    padding: 12px 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #d6c7b5;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.nav-brand {
+    color: #3b2f2f;
+    font-size: 1.4rem;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.nav-links {
+    display: flex;
+    gap: 35px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #4a3a32;
+    font-weight: 600;
+    transition: 0.2s;
+}
+
+.nav-links a:hover {
+    color: #b6783e;
+}
+
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+/* Carrito */
+.cart-icon-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 8px;
+    transition: 0.2s ease;
+}
+
+.cart-icon-container:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.cart-icon {
+    width: 28px;
+    height: auto;
+}
+
+#navbar-total {
+    font-weight: 700;
+    color: #3b2f2f;
+}
+
+/* Botón Ingresar */
+.nav-admin {
+    background: #3b2f2f;
+    color: white;
+    padding: 6px 14px;
+    border-radius: 10px;
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.3s;
+}
+
+.nav-admin img {
+    width: 18px;
+}
+
+.nav-admin:hover {
+    background: #b6783e;
+}
+
+
+
+/* =====================================
+   FOOTER GENERAL
+===================================== */
+.footer {
+    margin-top: 40px;
+    padding: 30px;
+    text-align: center;
+    background: #e9dbc7;
+    border-top: 1px solid #d6c7b5;
+}
+
+.footer-rima {
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #4a3a32;
+}
+
+.footer-social {
+    margin: 15px 0;
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+}
+
+.footer-icon img {
+    width: 28px;
+    transition: transform 0.25s;
+}
+
+.footer-icon:hover img {
+    transform: scale(1.2);
+}
+
+.footer-copy {
+    color: #4a3a32;
+    font-size: 0.9rem;
 }
