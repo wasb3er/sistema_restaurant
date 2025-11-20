@@ -7,81 +7,109 @@
   <title>Interfaz Mesero — Restaurant</title>
   <link rel="stylesheet" href="{% static 'mesero_style.css' %}">
 </head>
+
 <body>
   <div class="app" role="application">
+
+    <!-- HEADER -->
     <header>
       <h1>Mesero</h1>
+
       <div class="header-right">
         <div class="chip" id="timer">Tiempo 00:00</div>
-        <div class="chip">Garzón: 
-          <strong style="margin-left:8px">{{ request.session.empleado_nombre }}</strong>
+
+        <div class="chip">
+          Garzón:
+          <strong>{{ request.session.empleado_nombre }}</strong>
         </div>
       </div>
     </header>
 
+
+    <!-- MAPA DE MESAS -->
     <section class="mesas" aria-label="Mapa de mesas">
+
       <div class="controls">
-        <div style="width:220px">
+        <div class="search-box">
           <input id="search" type="search" placeholder="Buscar mesa o pedido">
         </div>
-        <select id="filter">
+
+        <select id="filter" class="filter-select">
           <option value="all">Todas</option>
           <option value="libre">Libres</option>
           <option value="ocupado">Ocupadas</option>
           <option value="pedido">Con pedido</option>
         </select>
       </div>
+
+      <!-- GRID DE MESAS -->
       <div class="mesas-grid" id="mesasGrid"></div>
 
-      <div style="margin-top:14px;display:flex;gap:12px;align-items:center">
-        <button class="btn secondary" id="qrBtn">Escanear QR (simulado)</button>
-        <button class="btn secondary" id="voiceToggle">Activar voz</button>
+
+      <!-- Herramientas -->
+      <div class="tools-row">
+        {% comment %} <button class="btn secondary" id="qrBtn">Escanear QR (simulado)</button>
+        <button class="btn secondary" id="voiceToggle">Activar voz</button> {% endcomment %}
         <div class="badge" id="notif">Notificaciones: 0</div>
       </div>
 
-      <div style="margin-top:12px;display:flex;gap:12px">
-        <div class="card" style="flex:1">
-          <div style="font-weight:600">Reloj de servicio</div>
-          <div id="serviceClock" style="font-size:20px;margin-top:8px">00:00:00</div>
+      <!-- Estado general -->
+      <div class="status-row">
+        <div class="card small">
+          <div class="card-title">Reloj de servicio</div>
+          <div class="card-value" id="serviceClock">00:00:00</div>
         </div>
-        <div class="card" style="width:180px">
-          <div style="font-weight:600">Mesas atendidas</div>
-          <div id="countMesas" style="font-size:20px;margin-top:8px">0</div>
+
+        <div class="card small">
+          <div class="card-title">Mesas atendidas</div>
+          <div class="card-value" id="countMesas">0</div>
         </div>
       </div>
+
     </section>
 
-    <aside class="panel" aria-label="Panel de pedido">
+
+    <!-- PANEL LATERAL DE PEDIDO -->
+    <aside class="panel" id="panelPedido">
+
       <h2 id="panelTitle">Selecciona una mesa</h2>
+
       <div class="order-items" id="orderItems">
-        <div style="padding:12px;color:var(--muted)">Aquí aparecerán los ítems del pedido.</div>
+        <p class="empty-msg">Aquí aparecerán los ítems del pedido.</p>
       </div>
+
       <div class="totals">
-        <div style="font-weight:600">Total</div>
-        <div id="totalAmount" style="font-size:20px">$0</div>
+        <span>Total:</span>
+        <span id="totalAmount">$0</span>
       </div>
-      <div style="display:flex;gap:10px">
+
+      <div class="panel-actions">
         <button class="btn" id="sendKitchen">Enviar a cocina</button>
-        <button class="btn secondary" id="splitBill">Dividir cuenta</button>
+        {% comment %} <button class="btn secondary" id="splitBill">Dividir cuenta</button> {% endcomment %}
         <button class="btn secondary" id="addItem">+ Agregar item</button>
       </div>
-      <div style="margin-top:12px;display:flex;gap:8px;align-items:center;color:var(--muted)">
-        <label style="font-size:13px">Sugerencias:</label>
-        <div id="suggestions" style="flex:1">- Lomos hoy (alto en ventas)</div>
-      </div>
+
+      {% comment %} <div class="suggestions">
+        <label>Sugerencias:</label>
+        <span id="suggestions">Lomos hoy (alto en ventas)</span>
+      </div> {% endcomment %}
+
     </aside>
 
+
+    <!-- NAV INFERIOR -->
     <nav class="bottom-nav" aria-label="Navegación">
-      <div class="nav-item">Mesas</div>
+      <div class="nav-item active">Mesas</div>
       <div class="nav-item">Pedidos</div>
       <div class="nav-item">Cuentas</div>
       <div class="nav-item">Rendim.</div>
     </nav>
+
   </div>
-  <div class="text-center mt-4">
-      {% comment %} <a href="{% url 'login_general' %}" class="btn btn-outline-secondary">Cerrar sesión</a> {% endcomment %}
-      <a href= "{% url 'logout_por_rol' 'mesero' %}" class="btn btn-outline-secondary">Cerrar sesión</a>
-    </div>
+
+  <div class="logout-container">
+    <a href="{% url 'logout_por_rol' 'mesero' %}" class="btn logout-btn">Cerrar sesión</a>
+  </div>
 
   <script src="{% static 'js/mesero_script.js' %}"></script>
 </body>

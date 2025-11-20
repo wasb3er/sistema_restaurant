@@ -1,130 +1,314 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Restaurante</title>
-    <link rel="stylesheet" href="{% static 'style.css' %}">
-    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}"> <!--botón para el icono en la pestaña-->
-    <!--Bootstrap-->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Bienvenido</title>
 
-  <!--animaciones-->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="stylesheet" href="{% static 'css/index_cliente.css' %}">
+</head>
 
-  <!--CSS-->
-  {% comment %} <link rel="stylesheet" href="{% static 'css/styles.css' %}"> {% endcomment %}
-</head >
-<button class="btn-admin" onclick="window.location.href='{% url 'login_general' %}'">
-  Ingresar como administrador
-</button>
 <body>
 
-  <section id="inicio" class="d-flex flex-column justify-content-center align-items-center text-center vh-100">
-    <div class="contenido animate__animated animate__fadeInUp">
-      <h1 class="titulo mb-4">¡Bienvenido, comienza a ordenar! </h1>
-      <p class="subtitulo mb-5">Sabores únicos, mejores gustos</p>
-      <button class="btn btn-primary btn-lg px-5 shadow boton-orden">Ordena Aquí</button>
-      <div><a href="{% url 'menu' %}" class="btn btn-outline-dark btn-lg mt-3 px-5 shadow boton-menu">Ver menú de platillos</a></div>
+<!-- NAVBAR -->
+<nav class="navbar">
+    <a href="{% url 'index' %}" class="nav-brand">RestFreshCO</a>
+
+    <div class="nav-links">
+        <a href="#inicio">Ordenar</a>
+        <a href="{% url 'menu' %}">Ver menú de platillos</a>
+        <a href="#favoritos">Favoritos del día</a>
     </div>
-  </section>
-<!---->
-<!--Formulario-->
-<div id="formulario" style="display:none; text-align:center; margin-top:20px;">
-  <h2>Ingresa tus datos</h2>
-  <form id="datosForm">
-    <label for="nombre">Nombre:</label><br>
-    <input type="text" id="nombre" name="nombre" required><br><br>
 
-    <label for="personas">Cantidad de personas:</label><br>
-    <input type="number" id="personas" name="personas" min="1" required><br><br>
+    <button class="nav-admin" onclick="window.location.href='{% url 'login_general' %}'">
+        <img src="/static/icons/badge-account.png" alt="icono usuario">
+        Ingresar
+    </button>
+</nav>
 
-    <button type="submit">Continuar</button>
-  </form>
+
+{% comment %} <nav class="navbar">
+    <div class="nav-title">Restaurante</div>
+    <button class="nav-admin" onclick="window.location.href='{% url 'login_general' %}'">
+        Ingresar como administrador
+    </button>
+</nav> {% endcomment %}
+
+<!-- =========================================================
+     NUEVO HERO ESTILO MARGO (texto izquierda + carrusel derecha)
+========================================================= -->
+<section id="inicio" class="hero-margo">
+
+    <!-- IZQUIERDA -->
+    <div class="hero-left">
+        <h1 class="hero-title">¡Bienvenido, comienza a ordenar!</h1>
+        <p class="hero-subtitle">Sabores únicos, mejores gustos</p>
+
+        <div class="hero-buttons">
+            <button id="btnMostrarFormulario" class="btn-primary">Ordena Aquí</button>
+
+            <a href="{% url 'menu' %}" class="btn-secondary">
+                Ver menú de platillos
+            </a>
+        </div>
+    </div>
+
+    <!-- DERECHA: CARRUSEL GRANDE -->
+<div class="hero-right">
+
+    <div class="big-carousel">
+
+        <div class="big-slide fade">
+            <img src="{% static 'img/platillo1.jpg' %}" alt="Mariscada Chilena">
+            <div class="big-caption">Mariscada Chilena</div>
+        </div>
+
+        <div class="big-slide fade">
+            <img src="{% static 'img/platillo2.jpg' %}" alt="Paella de Mariscos">
+            <div class="big-caption">Paella de Mariscos</div>
+        </div>
+
+        <div class="big-slide fade">
+            <img src="{% static 'img/platillo3.jpg' %}" alt="Porotos Granados">
+            <div class="big-caption">Porotos Granados</div>
+        </div>
+
+        <a class="big-prev">&#10094;</a>
+        <a class="big-next">&#10095;</a>
+    </div>
+
+    <!-- Si deseas puntos, aquí estarán -->
+    <div class="big-dots" id="bigDots"></div>
+
 </div>
 
-<div id="menu" style="display:none;">
 
-  <!--MODIFICAR LINEA, SOLO PARA QUE EN LA CONSOLA SALGA SIN ERRORES-->
-   <p id="resumen" style="text-align:center; font-weight:bold; margin-bottom:10px;"></p>
-  
-<h2>Control de Mesas</h2>
-<!--Eliminacion de formulario de pruebas-->
-<div class="pisos-control">
-  <button id="btnPiso1">Primer Piso</button>
-  <button id="btnPiso2">Segundo Piso</button>
+</section>
+
+
+<!-- ============================
+     FAVORITOS DEL DÍA
+=============================== -->
+<section class="favoritos-section">
+    <h2 class="section-title">Favoritos del Día</h2>
+
+    <div class="favoritos-grid">
+        <div class="fav-card">
+            <img src="/static/img/platillo1.jpg" alt="">
+            <h3 class="fav-title">Picante de Camarón</h3>
+            <p class="fav-desc">Cremoso, fresco y lleno de sabor.</p>
+            <span class="fav-price">$12.990</span>
+        </div>
+
+        <div class="fav-card">
+            <img src="/static/img/platillo2.jpg" alt="">
+            <h3 class="fav-title">Atún Sellado</h3>
+            <p class="fav-desc">Sellado a la perfección, estilo gourmet.</p>
+            <span class="fav-price">$14.900</span>
+        </div>
+
+        <div class="fav-card">
+            <img src="/static/img/platillo3.jpg" alt="">
+            <h3 class="fav-title">Strogonoff</h3>
+            <p class="fav-desc">Clásico y reconfortante.</p>
+            <span class="fav-price">$13.990</span>
+        </div>
+    </div>
+</section>
+
+
+<!-- ============================
+     EXPLORA POR CATEGORÍAS
+=============================== -->
+<section class="categorias-section">
+    <h2 class="section-title">Explora por Categorías</h2>
+
+    <div class="categorias-grid">
+        <div class="cat-card">
+            <img src="/static/img/platillo1.jpg">
+            <div class="cat-label">Para Picar</div>
+        </div>
+
+        <div class="cat-card">
+            <img src="/static/img/platillo2.jpg">
+            <div class="cat-label">Ensaladas</div>
+        </div>
+
+        <div class="cat-card">
+            <img src="/static/img/platillo3.jpg">
+            <div class="cat-label">Platos del Mar</div>
+        </div>
+
+        <div class="cat-card">
+            <img src="/static/img/platillo4.jpg">
+            <div class="cat-label">Platos de Carne</div>
+        </div>
+
+        <div class="cat-card">
+            <img src="/static/img/platillo5.jpg">
+            <div class="cat-label">Postres</div>
+        </div>
+
+        <div class="cat-card">
+            <img src="/static/img/platillo6.jpg">
+            <div class="cat-label">Otros</div>
+        </div>
+    </div>
+</section>
+
+
+<!-- FORMULARIO -->
+<section id="formulario" class="formulario oculto">
+    <div class="form-card">
+        <h2 class="form-title">Ingresa tus datos</h2>
+
+        <form id="datosForm">
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" class="input" placeholder="Tu nombre" required>
+
+            <label for="personas">Cantidad de personas:</label>
+            <input type="number" id="personas" class="input" min="1" value="1" required>
+
+            <button type="submit" class="btn-primary">Continuar</button>
+        </form>
+    </div>
+</section>
+
+<!-- MESAS -->
+<section id="menuPrincipal" class="mesas-section oculto">
+
+    <div class="mesas-header">
+        <h2 class="mesas-titulo">Control de Mesas</h2>
+        <div class="resumen-cliente" id="resumen"></div>
+    </div>
+
+    <!-- Selector de pisos -->
+    <div class="pisos-control">
+        <button id="btnPiso1" class="pisos-btn activo">Primer Piso</button>
+        <button id="btnPiso2" class="pisos-btn">Segundo Piso</button>
+    </div>
+
+    <!-- ========== PRIMER PISO ========== -->
+    <div class="salon" id="primer-piso">
+
+        <div id="mesa1" data-mesa-id="1" class="mesa disponible" role="button">
+            <div class="mesa-header"><span class="mesa-nombre">Mesa 1</span></div>
+            <div class="mesa-body">
+                <span class="status">Disponible</span>
+                <span class="timer">00:00:00</span>
+            </div>
+        </div>
+
+        <div id="mesa2" data-mesa-id="2" class="mesa disponible" role="button">
+            <div class="mesa-header"><span class="mesa-nombre">Mesa 2</span></div>
+            <div class="mesa-body">
+                <span class="status">Disponible</span>
+                <span class="timer">00:00:00</span>
+            </div>
+        </div>
+
+        <div id="mesa3" data-mesa-id="3" class="mesa disponible" role="button">
+            <div class="mesa-header"><span class="mesa-nombre">Mesa 3</span></div>
+            <div class="mesa-body">
+                <span class="status">Disponible</span>
+                <span class="timer">00:00:00</span>
+            </div>
+        </div>
+
+        <div id="mesa4" data-mesa-id="4" class="mesa disponible" role="button">
+            <div class="mesa-header"><span class="mesa-nombre">Mesa 4</span></div>
+            <div class="mesa-body">
+                <span class="status">Disponible</span>
+                <span class="timer">00:00:00</span>
+            </div>
+        </div>
+
+        <div id="mesa5" data-mesa-id="5" class="mesa disponible" role="button">
+            <div class="mesa-header"><span class="mesa-nombre">Mesa 5</span></div>
+            <div class="mesa-body">
+                <span class="status">Disponible</span>
+                <span class="timer">00:00:00</span>
+            </div>
+        </div>
+
+        <div id="mesa6" data-mesa-id="6" class="mesa disponible" role="button">
+            <div class="mesa-header"><span class="mesa-nombre">Mesa 6</span></div>
+            <div class="mesa-body">
+                <span class="status">Disponible</span>
+                <span class="timer">00:00:00</span>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ========== SEGUNDO PISO ========== -->
+    <div class="salon oculto" id="segundo-piso">
+
+        <div id="mesa7" data-mesa-id="7" class="mesa disponible" role="button">
+            <div class="mesa-header"><span class="mesa-nombre">Mesa 7</span></div>
+            <div class="mesa-body">
+                <span class="status">Disponible</span>
+                <span class="timer">00:00:00</span>
+            </div>
+        </div>
+
+        <div id="mesa8" data-mesa-id="8" class="mesa disponible" role="button">
+            <div class="mesa-header"><span class="mesa-nombre">Mesa 8</span></div>
+            <div class="mesa-body">
+                <span class="status">Disponible</span>
+                <span class="timer">00:00:00</span>
+            </div>
+        </div>
+
+        <div id="mesa9" data-mesa-id="9" class="mesa disponible" role="button">
+            <div class="mesa-header"><span class="mesa-nombre">Mesa 9</span></div>
+            <div class="mesa-body">
+                <span class="status">Disponible</span>
+                <span class="timer">00:00:00</span>
+            </div>
+        </div>
+
+    </div>
+
+</section>
+
+<!-- Botón IR AL MENÚ (Fuera de la vista de mesas → correcto para tu CSS) -->
+<div id="acciones" class="acciones oculto">
+    <button id="btnIrMenu" class="btn-menu oculto">Ir al Menú</button>
 </div>
 
-<!--Primer Piso-->
-<div class="salon" id="primer-piso">
-  <div id="mesa1" class="mesa disponible" role="button" tabindex="0" aria-pressed="false" aria-label="Mesa 1 disponible">
-    <div class="chair top"></div>
-    <div class="chair right"></div>
-    <div class="chair bottom"></div>
-    <div class="chair left"></div>
-    <div class="table"></div>
-    <div class="label">Mesa 1</div>
-    <div class="status">Disponible</div>
-    <div class="timer">00:00:00</div>
-  </div>
+<!-- =========================
+          FOOTER
+========================= -->
+<footer class="footer">
+    <p class="footer-rima">
+        “Sabores que enamoran, momentos que perduran.”
+    </p>
 
-  <div id="mesa2" class="mesa disponible" role="button" tabindex="0" aria-pressed="false" aria-label="Mesa 2 disponible">
-    <div class="chair top"></div>
-    <div class="chair right"></div>
-    <div class="chair bottom"></div>
-    <div class="chair left"></div>
-    <div class="table"></div>
-    <div class="label">Mesa 2</div>
-    <div class="status">Disponible</div>
-    <div class="timer">00:00:00</div>
-  </div>
+    <div class="footer-social">
+        <a href="https://facebook.com" target="_blank" class="footer-icon">
+            <img src="{% static 'icons/facebook.png' %}" alt="Facebook">
+        </a>
 
-  <div id="mesa3" class="mesa disponible" role="button" tabindex="0" aria-pressed="false" aria-label="Mesa 3 disponible">
-    <div class="chair top"></div>
-    <div class="chair right"></div>
-    <div class="chair bottom"></div>
-    <div class="chair left"></div>
-    <div class="table"></div>
-    <div class="label">Mesa 3</div>
-    <div class="status">Disponible</div>
-    <div class="timer">00:00:00</div>
-  </div>
-</div>
+        <a href="https://instagram.com" target="_blank" class="footer-icon">
+            <img src="{% static 'icons/instagram.png' %}" alt="Instagram">
+        </a>
 
-<!--Segundo Piso-->
-<div class="salon" id="segundo-piso" style="display:none;">
-  <div id="mesa4" class="mesa disponible" role="button" tabindex="0" aria-pressed="false" aria-label="Mesa 4 disponible">
-    <div class="chair top"></div>
-    <div class="chair right"></div>
-    <div class="chair bottom"></div>
-    <div class="chair left"></div>
-    <div class="table"></div>
-    <div class="label">Mesa 4</div>
-    <div class="status">Disponible</div>
-    <div class="timer">00:00:00</div>
-  </div>
+        <a href="https://wa.me/56912345678" target="_blank" class="footer-icon">
+            <img src="{% static 'icons/whatsapp.png' %}" alt="WhatsApp">
+        </a>
+    </div>
 
-  <div id="mesa5" class="mesa disponible" role="button" tabindex="0" aria-pressed="false" aria-label="Mesa 5 disponible">
-    <div class="chair top"></div>
-    <div class="chair right"></div>
-    <div class="chair bottom"></div>
-    <div class="chair left"></div>
-    <div class="table"></div>
-    <div class="label">Mesa 5</div>
-    <div class="status">Disponible</div>
-    <div class="timer">00:00:00</div>
-  </div>
-</div>
-</div>
+    <p class="footer-copy">© 2025 Restaurante — Todos los derechos reservados</p>
+</footer>
 
-<div id="acciones" style="text-align: center; margin-top: 20px; display: none;">
-    <button id="btnIrMenu">Ir al Menú</button>
-  </div>
-    
 
-<script src="{% static 'js/index.js' %}"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    window.IS_CLIENT_VIEW = true;
+</script>
+
+<script defer src="{% static 'js/index_cliente.js' %}"></script>
+
 </body>
 </html>
-
