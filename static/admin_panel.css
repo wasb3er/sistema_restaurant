@@ -424,3 +424,50 @@ nav {
     box-shadow: 0 3px 6px rgba(0,0,0,0.12);
     margin-top: 10px;
 }
+
+/* ALERTA FLOTANTE TIPO TOAST */
+.alert-box {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    min-width: 260px;
+    padding: 14px 20px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 500;
+    display: none;
+    z-index: 3000;
+    opacity: 0;
+    transform: translateX(40px);
+    transition: transform 0.4s ease, opacity 0.4s ease;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+}
+
+/* Cuando aparece */
+.alert-box.show {
+    display: block;
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Cuando desaparece */
+.alert-box.hide {
+    opacity: 0;
+    transform: translateY(-20px);
+}
+
+/* Colores */
+.alert-box.success {
+    background: #2e7d32;
+    color: white;
+}
+
+.alert-box.error {
+    background: #c62828;
+    color: white;
+}
+
+.alert-box.warning {
+    background: #f9a825;
+    color: #000;
+}
