@@ -1,6 +1,6 @@
 <h2>Gestión de Empleados</h2>
 
-<!-- ALERTA GLOBAL -->
+<!--ALERTA-->
 <div id="alertBox" class="alert-box hidden"></div>
 
 <button id="addEmployeeBtn" class="btn-primary">Agregar empleado</button>
@@ -21,7 +21,7 @@
             <td>{{ e.username }}</td>
             <td>{{ e.rol }}</td>
 
-            <!-- BOTÓN ACTIVO / INACTIVO -->
+            <!--CAMBIAR activo/inactivo-->
             <td>
                 <button 
                     class="toggle-btn {{ e.activo|yesno:'activo,inactivo' }}" 
@@ -37,7 +37,7 @@
 </table>
 
 
-<!-- MODAL PARA AGREGAR EMPLEADO -->
+<!--Agregar empleado con formulario-->
 <div id="employeeModal" class="modal hidden">
   <div class="modal-content form-card">
     <h3 class="modal-title">Agregar nuevo empleado</h3>
