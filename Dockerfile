@@ -1,7 +1,6 @@
-#Imagen base
 FROM python:3.11-slim
 
-#Instalar dependencias del sistema y utilidades de red
+# Dependencias necesarias del sistema
 RUN apt-get update && apt-get install -y \
     iputils-ping \
     curl \
@@ -10,25 +9,20 @@ RUN apt-get update && apt-get install -y \
     postgresql-client \
     netcat-openbsd \
  && rm -rf /var/lib/apt/lists/*
- RUN pip install Pillow
- RUN pip install openpyxl
 
-#Directorio de trabajo dentro del contenedor
+# Directorio del proyecto
 WORKDIR /app
 
-#dependencias
+# Copiar dependencias
 COPY requirements.txt .
 
-#Instalar dependencias de Python
-RUN pip install --no-cache-dir -r requirements.txt \
-    --default-timeout=200 \
-    -i https://pypi.org/simple
+# Instalar dependencias Python
+RUN pip install --upgrade pip
+RUN pip install --no-cache-dir -r requirements.txt
 
-#Hacer copia de todo el proyecto
+# Copiar proyecto completo
 COPY . .
 
-#Exponer puerto
 EXPOSE 8000
 
-#Comando por defecto al iniciar el contenedor
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
