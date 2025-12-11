@@ -1,0 +1,68 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Pago Exitoso</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+
+<body class="pago-body">
+
+<!-- HEADER UNIFICADO -->
+<header class="pago-header">
+    <span class="pago-logo">RestFreshCO</span>
+</header>
+
+<!-- CONTENEDOR PRINCIPAL -->
+<div class="pago-wrapper">
+
+    <div class="pago-card">
+
+        <h2 class="pago-title" style="margin-bottom: 5px;">¡Pago realizado con éxito!</h2>
+
+        <p style="text-align:center; color:#4a3a32; margin-bottom:25px;">
+            Gracias por tu compra.
+        </p>
+
+        <div class="pago-items">
+            <div class="pago-item" style="border:none;">
+                <div class="pago-item-left">
+                    <span class="item-name">Número de Orden</span>
+                </div>
+                <div class="pago-item-price">
+                    {{ buy_order }}
+                </div>
+            </div>
+
+            <div class="pago-item" style="border:none;">
+                <div class="pago-item-left">
+                    <span class="item-name">Monto pagado</span>
+                </div>
+                <div class="pago-item-price">
+                    ${{ amount }}
+                </div>
+            </div>
+
+            <div class="pago-item" style="border:none;">
+                <div class="pago-item-left">
+                    <span class="item-name">Estado Webpay</span>
+                </div>
+                <div class="pago-item-price" style="color:#1f8a2b;">
+                    {{ status }}
+                </div>
+            </div>
+        </div>
+
+        <hr class="pago-divider">
+
+        <a href="/" class="pago-btn pagar-btn" style="text-align:center;">
+            Volver al inicio
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+</html>

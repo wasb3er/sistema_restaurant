@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Mesa confirmada</title>
+</head>
+<body>
+
+    <p>Mesa {{ mesa.numero }} confirmada. Redirigiendo al menú...</p>
+
+    <script>
+        // Limpiar datos anteriores para evitar conflictos
+        localStorage.removeItem("mesa_id");
+        localStorage.removeItem("clienteNombre");
+        localStorage.removeItem("clientePersonas");
+
+        // Guardar los nuevos valores correctos
+        localStorage.setItem("mesa_id", "{{ mesa.id }}");  
+        localStorage.setItem("clienteNombre", "{{ nombre|escapejs }}");
+        localStorage.setItem("clientePersonas", "{{ personas }}");
+
+        // Redirigir al menú
+        window.location.href = "{{ menu_url }}";
+    </script>
+
+</body>
+</html>

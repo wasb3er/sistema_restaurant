@@ -1,0 +1,165 @@
+{% csrf_token %}
+
+<!-- ========== PRIMER PISO ========== -->
+<div class="salon" id="primer-piso">
+
+    <!-- MESA 1 -->
+    <form method="post" action="" class="mesa" data-mesa-id="1" role="button">
+        {% csrf_token %}
+        <input type="hidden" name="vista" value="mesa">
+        <input type="hidden" name="mesa_numero" value="1">
+        <input type="hidden" name="nombre" value="{{ nombre }}">
+        <input type="hidden" name="personas" value="{{ personas }}">
+
+        <button type="submit" class="mesa-content">
+            <div class="mesa-header"><span class="mesa-nombre">Mesa 1</span></div>
+            <div class="mesa-body">
+                <span class="status"></span>
+                {% comment %} <span class="timer">00:00:00</span> {% endcomment %}
+            </div>
+        </button>
+    </form>
+
+    <!-- MESA 2 -->
+    <form method="post" action="" class="mesa" data-mesa-id="2" role="button">
+        {% csrf_token %}
+        <input type="hidden" name="vista" value="mesa">
+        <input type="hidden" name="mesa_numero" value="2">
+        <input type="hidden" name="nombre" value="{{ nombre }}">
+        <input type="hidden" name="personas" value="{{ personas }}">
+
+        <button type="submit" class="mesa-content">
+            <div class="mesa-header"><span class="mesa-nombre">Mesa 2</span></div>
+            <div class="mesa-body">
+                <span class="status"></span>
+                {% comment %} <span class="timer">00:00:00</span> {% endcomment %}
+            </div>
+        </button>
+    </form>
+
+    <!-- MESA 3 -->
+    <form method="post" action="" class="mesa" data-mesa-id="3" role="button">
+        {% csrf_token %}
+        <input type="hidden" name="vista" value="mesa">
+        <input type="hidden" name="mesa_numero" value="3">
+        <input type="hidden" name="nombre" value="{{ nombre }}">
+        <input type="hidden" name="personas" value="{{ personas }}">
+
+        <button type="submit" class="mesa-content">
+            <div class="mesa-header"><span class="mesa-nombre">Mesa 3</span></div>
+            <div class="mesa-body">
+                <span class="status"></span>
+                {% comment %} <span class="timer">00:00:00</span> {% endcomment %}
+            </div>
+        </button>
+    </form>
+
+    <!-- MESA 4 -->
+    <form method="post" action="" class="mesa" data-mesa-id="4" role="button">
+        {% csrf_token %}
+        <input type="hidden" name="vista" value="mesa">
+        <input type="hidden" name="mesa_numero" value="4">
+        <input type="hidden" name="nombre" value="{{ nombre }}">
+        <input type="hidden" name="personas" value="{{ personas }}">
+
+        <button type="submit" class="mesa-content">
+            <div class="mesa-header"><span class="mesa-nombre">Mesa 4</span></div>
+            <div class="mesa-body">
+                <span class="status"></span>
+                {% comment %} <span class="timer">00:00:00</span> {% endcomment %}
+            </div>
+        </button>
+    </form>
+
+    <!-- MESA 5 -->
+    <form method="post" action="" class="mesa" data-mesa-id="5" role="button">
+        {% csrf_token %}
+        <input type="hidden" name="vista" value="mesa">
+        <input type="hidden" name="mesa_numero" value="5">
+        <input type="hidden" name="nombre" value="{{ nombre }}">
+        <input type="hidden" name="personas" value="{{ personas }}">
+
+        <button type="submit" class="mesa-content">
+            <div class="mesa-header"><span class="mesa-nombre">Mesa 5</span></div>
+            <div class="mesa-body">
+                <span class="status"></span>
+                {% comment %} <span class="timer">00:00:00</span> {% endcomment %}
+            </div>
+        </button>
+    </form>
+
+    <!-- MESA 6 -->
+    <form method="post" action="" class="mesa" data-mesa-id="6" role="button">
+        {% csrf_token %}
+        <input type="hidden" name="vista" value="mesa">
+        <input type="hidden" name="mesa_numero" value="6">
+        <input type="hidden" name="nombre" value="{{ nombre }}">
+        <input type="hidden" name="personas" value="{{ personas }}">
+
+        <button type="submit" class="mesa-content">
+            <div class="mesa-header"><span class="mesa-nombre">Mesa 6</span></div>
+            <div class="mesa-body">
+                <span class="status"></span>
+                {% comment %} <span class="timer">00:00:00</span> {% endcomment %}
+            </div>
+        </button>
+    </form>
+
+</div>
+
+
+<!-- ========== SEGUNDO PISO ========== -->
+<div class="salon oculto" id="segundo-piso">
+
+    <!-- MESA 7 -->
+    <form method="post" action="" class="mesa" data-mesa-id="7" role="button">
+        {% csrf_token %}
+        <input type="hidden" name="vista" value="mesa">
+        <input type="hidden" name="mesa_numero" value="7">
+        <input type="hidden" name="nombre" value="{{ nombre }}">
+        <input type="hidden" name="personas" value="{{ personas }}">
+
+        <button type="submit" class="mesa-content">
+            <div class="mesa-header"><span class="mesa-nombre">Mesa 7</span></div>
+            <div class="mesa-body">
+                <span class="status"></span>
+                {% comment %} <span class="timer">00:00:00</span> {% endcomment %}
+            </div>
+        </button>
+    </form>
+
+    <!-- MESA 8 -->
+    <form method="post" action="" class="mesa" data-mesa-id="8" role="button">
+        {% csrf_token %}
+        <input type="hidden" name="vista" value="mesa">
+        <input type="hidden" name="mesa_numero" value="8">
+        <input type="hidden" name="nombre" value="{{ nombre }}">
+        <input type="hidden" name="personas" value="{{ personas }}">
+
+        <button type="submit" class="mesa-content">
+            <div class="mesa-header"><span class="mesa-nombre">Mesa 8</span></div>
+            <div class="mesa-body">
+                <span class="status"></span>
+                {% comment %} <span class="timer">00:00:00</span> {% endcomment %}
+            </div>
+        </button>
+    </form>
+
+    <!-- MESA 9 -->
+    <form method="post" action="" class="mesa" data-mesa-id="9" role="button">
+        {% csrf_token %}
+        <input type="hidden" name="vista" value="mesa">
+        <input type="hidden" name="mesa_numero" value="9">
+        <input type="hidden" name="nombre" value="{{ nombre }}">
+        <input type="hidden" name="personas" value="{{ personas }}">
+
+        <button type="submit" class="mesa-content">
+            <div class="mesa-header"><span class="mesa-nombre">Mesa 9</span></div>
+            <div class="mesa-body">
+                <span class="status"></span>
+                {% comment %} <span class="timer">00:00:00</span> {% endcomment %}
+            </div>
+        </button>
+    </form>
+
+</div>

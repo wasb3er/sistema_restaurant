@@ -1,0 +1,110 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Resumen de Pago</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+
+<body class="pago-body">
+
+<!-- ENCABEZADO -->
+<header class="pago-header">
+    <span class="pago-logo">RestFreshCO</span>
+</header>
+
+<!-- CONTENEDOR PRINCIPAL -->
+<div class="pago-wrapper">
+
+    <div class="pago-card">
+
+        <h2 class="pago-title">Resumen de tu pedido</h2>
+
+        <div class="pago-items-title">Items del pedido</div>
+
+        <div class="pago-items">
+            {% if carrito %}
+                {% for item in carrito %}
+                <div class="pago-item">
+                    
+                    <!-- Columna Izquierda: Nombre + detalles -->
+                    <div class="pago-item-left">
+                        <span class="item-name">{{ item.nombre }}</span>
+                        <span class="item-details">
+                            x{{ item.cantidad }} • ${{ item.precio }} c/u
+                        </span>
+                    </div>
+
+                    <!-- Columna Derecha: Subtotal -->
+                    <div class="pago-item-price">
+                        ${{ item.subtotal }}
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p>No hay items en el carrito.</p>
+            {% endif %}
+        </div>
+
+        <hr class="pago-divider">
+
+        <div class="pago-total-box">
+            <span>Total</span>
+            <span class="pago-total-amount">${{ total }}</span>
+        </div>
+
+        <button id="btnWebpay" class="pago-btn pagar-btn">Pagar con Webpay</button>
+
+        <a href="/" class="pago-btn volver-btn">Volver al inicio</a>
+
+    </div>
+
+</div>
+
+<!-- SCRIPT WEBPAY -->
+<script>
+document.getElementById("btnWebpay").addEventListener("click", () => {
+
+    fetch("/pago/webpay/iniciar/", {
+        method: "POST",
+        headers: { "X-CSRFToken": "{{ csrf_token }}" }
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (!data.url || !data.token) {
+            if (typeof mostrarPopupStock === "function") {
+                mostrarPopupStock("Error iniciando pago.");
+            } else {
+                alert("Error iniciando pago.");
+            }
+            return;
+        }
+
+        const form = document.createElement("form");
+        form.method = "POST";
+        form.action = data.url;
+
+        const input = document.createElement("input");
+        input.type = "hidden";
+        input.name = "token_ws";
+        input.value = data.token;
+
+        form.appendChild(input);
+        document.body.appendChild(form);
+
+        form.submit();
+    })
+    .catch(err => {
+        if (typeof mostrarPopupStock === "function") {
+            mostrarPopupStock("Error conectando con Webpay.");
+        } else {
+            alert("Error conectando con Webpay.");
+        }
+        console.error(err);
+    });
+});
+</script>
+
+</body>
+</html>

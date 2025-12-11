@@ -1,0 +1,146 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Seleccionar Mesa</title>
+    <link rel="stylesheet" href="{% static 'css/index_cliente.css' %}">
+</head>
+
+<body>
+
+<!-- ============================
+           NAVBAR
+============================= -->
+<nav class="navbar">
+    <a href="{% url 'index' %}" class="nav-brand">RestFreshCO</a>
+
+    <div class="nav-links">
+        <a href="{% url 'index' %}#inicio">Inicio</a>
+        <a href="{% url 'menu' %}">Menú</a>
+        <a href="{% url 'index' %}#favoritos">Favoritos</a>
+    </div>
+
+    <button class="nav-admin" onclick="window.location.href='{% url 'login_general' %}'">
+        <img src="{% static 'icons/badge-account.png' %}" alt="icono usuario">
+        Ingresar
+    </button>
+</nav>
+
+<div style="height:110px;"></div>
+
+
+
+<!-- ==========================================================
+   PASO 1 — FORMULARIO CLIENTE
+   Solo visible cuando step == "form"
+============================================================== -->
+<section id="form-datos" class="formulario {% if step != 'form' %}oculto{% endif %}">
+    <div class="form-card">
+        <h2 class="form-title">Ingresa tus datos</h2>
+
+        {% if errores %}
+        <div class="qr-errors">
+            <ul>
+                {% for e in errores %}
+                <li>{{ e }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="vista" value="form">
+
+            <label>Nombre:</label>
+            <input type="text" name="nombre" class="input" value="{{ nombre }}" required>
+
+            <label>Cantidad de personas:</label>
+            <input type="number" name="personas" min="1" class="input"
+                   value="{{ personas|default:1 }}" required>
+
+            <button class="btn-primary" style="width:100%;margin-top:20px;">
+                Seleccionar mesa
+            </button>
+        </form>
+    </div>
+</section>
+
+
+
+<!-- ==========================================================
+   PASO 2 — SELECCIÓN DE MESAS
+   Solo visible cuando step == "mesas"
+============================================================== -->
+<section id="contenedor-mesas" class="mesas-section {% if step != 'mesas' %}oculto{% endif %}">
+
+    <div class="mesas-header">
+        <h2 class="mesas-titulo">Selecciona tu mesa</h2>
+        <div class="resumen-cliente">
+            {{ nombre }} — {{ personas }} persona(s)
+        </div>
+    </div>
+
+    <!-- Botones de piso -->
+    <div class="pisos-control">
+        <button id="btnPiso1" class="pisos-btn activo">Primer Piso</button>
+        <button id="btnPiso2" class="pisos-btn">Segundo Piso</button>
+    </div>
+
+    <!-- Fragmento -->
+    {% include 'cliente/mesas_fragment.html' %}
+</section>
+
+
+
+<!-- ==========================================================
+   PASO 3 — FORMULARIO PIN
+   Solo visible cuando step == "pin"
+============================================================== -->
+<section id="contenedor-pin" class="formulario {% if step != 'pin' %}oculto{% endif %}">
+    <div class="form-card">
+
+        <h2 class="form-title">Confirmar Mesa {{ mesa.numero }}</h2>
+
+        {% if errores %}
+        <div class="qr-errors">
+            <ul>
+                {% for e in errores %}
+                <li>{{ e }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="vista" value="pin">
+            <input type="hidden" name="mesa_numero" value="{{ mesa.numero }}">
+            <input type="hidden" name="nombre" value="{{ nombre }}">
+            <input type="hidden" name="personas" value="{{ personas }}">
+
+            <label>PIN de la mesa:</label>
+            <input type="password" name="pin" maxlength="4" class="input"
+                   placeholder="Ej: 3842" required>
+
+            <button class="btn-primary" style="width:100%;margin-top:20px;">
+                Confirmar mesa y continuar
+            </button>
+        </form>
+    </div>
+</section>
+
+
+
+<!-- Popup -->
+<div id="popup-alert" class="popup-oculto">
+    <div class="popup-mensaje" id="popup-texto"></div>
+</div>
+
+
+<!-- JS -->
+<script defer src="{% static 'js/mesa_qr.js' %}"></script>
+
+</body>
+</html>

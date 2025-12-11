@@ -1,0 +1,54 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Error en el Pago</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+
+<body class="pago-body">
+
+<!-- ENCABEZADO -->
+<header class="pago-header">
+    <span class="pago-logo">RestFreshCO</span>
+</header>
+
+<!-- CONTENEDOR PRINCIPAL -->
+<div class="pago-wrapper">
+
+    <div class="pago-card">
+
+        <h2 class="pago-title" style="color:#7a3b38;">Hubo un problema con el pago</h2>
+
+        <p style="text-align:center; color:#4a3a32; margin-top:-10px;">
+            El pago no pudo ser procesado correctamente.
+        </p>
+
+        <div class="pago-items" style="margin-top: 25px;">
+            <div class="pago-item" style="border:none;">
+                <div class="pago-item-left">
+                    <span class="item-name">Estado Webpay</span>
+                </div>
+                <div class="pago-item-price" style="color:#b01d1d;">
+                    {{ status }}
+                </div>
+            </div>
+        </div>
+
+        <hr class="pago-divider">
+
+        <a href="/pago/resumen/" class="pago-btn pagar-btn" style="margin-bottom:10px;">
+            Intentar nuevamente
+        </a>
+
+        <a href="/" class="pago-btn volver-btn">
+            Volver al inicio
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+</html>
