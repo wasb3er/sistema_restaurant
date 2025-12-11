@@ -12,6 +12,7 @@
             <th>Usuario</th>
             <th>Rol</th>
             <th>Activo</th>
+            <th>Estado laboral</th>
         </tr>
     </thead>
     <tbody>
@@ -29,9 +30,32 @@
                     {{ e.activo|yesno:"Sí,No" }}
                 </button>
             </td>
+
+            <!-- ESTADO LABORAL CON BOTÓN + DROPDOWN -->
+            <td>
+              <div class="estado-dropdown" data-id="{{ e.id }}">
+                  <button 
+                      class="estado-btn estado-{{ e.estado_laboral|default:'trabajando' }}">
+                      <span class="estado-text">
+                          {% if e.estado_laboral == 'vacaciones' %}De vacaciones
+                          {% elif e.estado_laboral == 'licencia' %}Licencia
+                          {% elif e.estado_laboral == 'despedido' %}Despedido
+                          {% else %}Trabajando{% endif %}
+                      </span>
+                      <span class="estado-caret">▾</span>
+                  </button>
+
+                  <div class="estado-menu">
+                      <button type="button" class="estado-option" data-estado="trabajando">Trabajando</button>
+                      <button type="button" class="estado-option" data-estado="vacaciones">De vacaciones</button>
+                      <button type="button" class="estado-option" data-estado="licencia">Licencia</button>
+                      <button type="button" class="estado-option" data-estado="despedido">Despedido</button>
+                  </div>
+              </div>
+            </td>
         </tr>
         {% empty %}
-        <tr><td colspan="4">No hay empleados registrados</td></tr>
+        <tr><td colspan="5">No hay empleados registrados</td></tr>
         {% endfor %}
     </tbody>
 </table>

@@ -1060,3 +1060,230 @@ h3.fw-bold {
     color: #4a3a32;
     font-size: 0.9rem;
 }
+
+.categorias-scroll {
+    display: flex;
+    overflow-x: auto;
+    gap: 12px;
+    padding: 8px 15px;
+    margin-bottom: 15px;
+}
+
+.categorias-scroll::-webkit-scrollbar {
+    display: none;
+}
+
+.categoria-btn {
+    background: #3b2f2f;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 20px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background .2s;
+}
+
+.categoria-btn:hover {
+    background: #6a4a3c;
+}
+
+.categoria-btn.active {
+    background: #c4a27e;
+    color: #3b2f2f;
+}
+
+.categoria-seccion {
+    display: none;
+}
+
+.categoria-seccion.active {
+    display: block;
+}
+
+/* === POPUP DE STOCK === */
+#popup-stock {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.45);
+    backdrop-filter: blur(4px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .3s ease-in-out;
+    z-index: 3000;
+}
+
+#popup-stock.mostrar {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.popup-contenido {
+    width: 420px;
+    background: #fffaf2;
+    padding: 35px;
+    border-radius: 18px;
+    box-shadow: 0 6px 25px rgba(0,0,0,0.25);
+    text-align: center;
+    animation: popupEntrada .25s ease-out;
+    border: 1px solid #e0d0c0;
+}
+
+.popup-contenido p {
+    font-size: 1.1rem;
+    color: #3b2f2f;
+    font-weight: 600;
+    margin: 0;
+}
+
+@keyframes popupEntrada {
+    from { transform: scale(0.92); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
+}
+
+
+/* === PAGO RESUMEN === */
+
+.pago-body {
+    background: #f8f1e7;
+    margin: 0;
+    padding: 0;
+    font-family: system-ui, Arial, sans-serif;
+}
+
+.pago-header {
+    width: 100%;
+    padding: 18px 0;
+    background: #e9dbc7;
+    border-bottom: 1px solid #d7c7b4;
+    text-align: center;
+}
+
+.pago-logo {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #3b2f2f;
+}
+
+.pago-wrapper {
+    display: flex;
+    justify-content: center;
+    padding: 40px 20px;
+}
+
+.pago-card {
+    width: 100%;
+    max-width: 520px;
+    background: #fffaf2;
+    padding: 30px;
+    border-radius: 18px;
+    box-shadow: 0px 6px 20px rgba(0,0,0,0.10);
+    border: 1px solid #e2d2c3;
+}
+
+.pago-title {
+    text-align: center;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #3b2f2f;
+    margin-bottom: 20px;
+}
+
+.pago-items-title {
+    font-size: 1.1rem;
+    color: #4a3a32;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.pago-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #e0d0c0;
+}
+
+.pago-item-left .item-name {
+    font-weight: 600;
+    color: #3b2f2f;
+}
+
+.pago-item-left .item-cant {
+    margin-left: 6px;
+    color: #7a6e60;
+}
+
+.pago-item-price {
+    font-weight: 600;
+    color: #b8793e;
+}
+
+.pago-divider {
+    margin: 20px 0;
+    border-color: #e0d0c0;
+}
+
+.pago-total-box {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: #3b2f2f;
+}
+
+.pago-total-amount {
+    color: #d48a00;
+}
+
+.pago-btn {
+    width: 100%;
+    padding: 12px;
+    display: block;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 12px;
+    cursor: pointer;
+    border: none;
+}
+
+.pagar-btn {
+    background: #2f9d58;
+    color: white;
+}
+
+.pagar-btn:hover {
+    background: #267e46;
+}
+
+.volver-btn {
+    background: #ccc;
+    color: #3b2f2f;
+}
+
+.volver-btn:hover {
+    background: #bbb;
+}
+
+.item-details {
+    display: block;
+    font-size: 0.9rem;
+    color: #7a6e60;
+    margin-top: 2px;
+}
+
+.pago-item-price {
+    font-weight: 700;
+    color: #b8793e;
+    min-width: 80px;
+    text-align: right;
+}

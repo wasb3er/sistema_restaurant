@@ -1,163 +1,231 @@
-/* === ESTILOS GENERALES === */
-:root {
-  --bg:#0f1316;
-  --panel:#16191c;
-  --muted:#9aa3aa;
-  --accent:#2f9d58;
-  --warning:#e0a800;
-  --danger:#d9534f;
-  --card:#1d2125;
-
-  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
-  color-scheme: dark;
-}
-
+/* ================================
+   ESTILOS BASE
+================================ */
 body {
-  background:#0b0d0f;
-  color:#fff;
-  margin:0;
+    margin: 0;
+    background: #0f0f0f;
+    font-family: Arial, sans-serif;
+    color: #e6e6e6;
 }
 
-.app {
-  max-width:1300px;
-  margin:25px auto;
-  padding:22px;
-  display:grid;
-  grid-template-columns:1fr 420px;
-  gap:20px;
+h1, h2, h3, p {
+    margin: 0;
 }
 
-
-/* === HEADER === */
-header {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:10px;
+/* ================================
+   NAV
+================================ */
+.topbar {
+    /* width: 100%; */
+    background: #181818;
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #333;
+    position: sticky;
+    top: 0;
+    z-index: 10;
 }
 
-.chip {
-  background:#222;
-  padding:7px 14px;
-  border-radius:20px;
-  font-size:14px;
+.title {
+    font-size: 24px;
+    font-weight: bold;
 }
 
-
-/* === SECCIÓN MESAS === */
-.mesas {
-  background:var(--panel);
-  border-radius:14px;
-  padding:18px;
+.topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
-/* Filtro + Buscador */
+.btn-logout {
+    background: #b30000;
+    padding: 8px 14px;
+    color: #fff;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* ================================
+   LAYOUT
+================================ */
+.mesero-layout {
+    display: grid;
+    grid-template-columns: 65% 35%;
+    gap: 25px;
+    padding: 20px;
+}
+
+/* ================================
+   CONTROLES (FILTRO / BUSCAR)
+================================ */
+
 .controls {
-  display:flex;
-  justify-content:space-between;
-  margin-bottom:18px;
+    display: flex;
+    gap: 12px;
+    margin-bottom: 15px;
 }
 
-.search-box input {
-  width:100%;
-  padding:10px 12px;
-  border-radius:10px;
-  border:none;
-  background:#222;
-  color:white;
+.search-box,
+.filter-select {
+    background: #1a1a1a;
+    border: 1px solid #333;
+    padding: 8px 12px;
+    border-radius: 6px;
+    color: white;
+}
+
+.search-box {
+    flex: 1;
 }
 
 .filter-select {
-  padding:10px;
-  border-radius:10px;
-  background:#222;
-  border:none;
-  color:white;
+    width: 160px;
 }
 
-
-/* === GRID DE MESAS === */
+/* ================================
+   MESAS
+================================ */
 .mesas-grid {
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
-  gap:16px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 15px;
 }
 
 .mesa-card {
-  background:var(--card);
-  padding:16px;
-  border-radius:14px;
-  cursor:pointer;
-  transition:0.2s;
+    padding: 14px;
+    margin-bottom: 10px;
+    border-radius: 12px;
+    background: #141414;
+    border: 2px solid #444;
+    cursor: pointer;
+    transition: 0.2s ease-in-out;
 }
 
 .mesa-card:hover {
-  transform:scale(1.03);
+    transform: scale(1.03);
 }
 
 .mesa-number {
-  font-size:20px;
-  font-weight:600;
+    font-size: 20px;
+    font-weight: bold;
 }
 
 .mesa-status {
-  margin-top:8px;
-  font-size:14px;
-  color:var(--muted);
+    opacity: .8;
 }
 
-.mesa-mesero {
-  margin-top:6px;
-  font-size:13px;
-  opacity:0.7;
+/* COLORES FLUJO A */
+.mesa-libre {
+    border-color: #00cc66 !important; /* verde */
 }
 
-/* Colores de estado */
-.estado-libre { box-shadow:0 0 0 3px var(--accent); }
-.estado-ocupado { box-shadow:0 0 0 3px var(--danger); }
-.estado-pedido { box-shadow:0 0 0 3px var(--warning); }
+.mesa-pedido {
+    border-color: #ffcc00 !important; /* amarillo */
+}
 
+.mesa-listo {
+    border-color: #ff4444 !important; /* rojo */
+}
 
-/* === PANEL LATERAL === */
+.mesa-entregado {
+    border-color: #0080ff !important; /* azul */
+}
+
+/* ================================
+   PANEL LATERAL
+================================ */
 .panel {
-  background:var(--panel);
-  border-radius:14px;
-  padding:20px;
+    background: #151515;
+    padding: 20px;
+    border-radius: 14px;
+    min-height: 600px;
 }
 
 .order-items {
-  min-height:200px;
-  background:#202428;
-  border-radius:10px;
-  padding:12px;
+    background: #1a1a1a;
+    padding: 15px;
+    border-radius: 10px;
+    min-height: 250px;
 }
 
 .empty-msg {
-  color:var(--muted);
+    opacity: .7;
 }
 
 .totals {
-  display:flex;
-  justify-content:space-between;
-  font-size:18px;
-  margin:14px 0;
+    display: flex;
+    justify-content: space-between;
+    margin: 15px 0;
+    font-size: 18px;
 }
 
 .panel-actions {
-  display:flex;
-  gap:10px;
+    display: flex;
+    gap: 12px;
+    margin-top: 15px;
 }
 
-.suggestions {
-  margin-top:12px;
-  font-size:13px;
-  color:var(--muted);
-}
-
-
-/* === BOTONES === */
 .btn {
-  background:var(--accent);
-  padding:10px 12px;
-  border-radius:10px;
+    padding: 10px 14px;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn.secondary {
+    background: #2d7cff;
+}
+
+.btn.warn {
+    background: #ff4444;
+}
+
+.btn.danger {
+    background: #b30000;
+}
+
+.oculto {
+    display: none !important;
+}
+
+/* ================================
+   MODAL
+================================ */
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal.oculto {
+    display: none;
+}
+
+.modal-content {
+    background: #1b1b1b;
+    padding: 25px;
+    border-radius: 12px;
+    width: 420px;
+    max-height: 80vh;
+    overflow-y: auto;
+    position: relative;
+}
+
+.close-btn {
+    position: absolute;
+    right: 12px;
+    top: 8px;
+    background: none;
+    border: none;
+    font-size: 22px;
+    color: #ccc;
+    cursor: pointer;
 }

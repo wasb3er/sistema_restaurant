@@ -1,159 +1,281 @@
-//Cargar MESAS
+/* =====================================================
+   VARIABLES GLOBALES
+===================================================== */
+let mesaSeleccionada = null;
+let pedidoActualId = null;
+
+/* Elementos del DOM */
+const mesasGrid = document.getElementById("mesasGrid");
+const panelTitle = document.getElementById("panelTitle");
+const orderItems = document.getElementById("orderItems");
+const totalAmount = document.getElementById("totalAmount");
+const sendKitchenBtn = document.getElementById("sendKitchen");
+const finishOrderBtn = document.getElementById("finishOrder");
+const addItemBtn = document.getElementById("addItem");
+
+const searchInput = document.getElementById("search");
+const filterSelect = document.getElementById("filter");
+
+/* Modal agregar ítem */
+const modalAddItem = document.getElementById("modalAddItem");
+const closeModalAddItem = document.getElementById("closeModalAddItem");
+const modalItemsContainer = document.getElementById("modalItemsContainer");
+
+/* =====================================================
+   CARGAR MESAS
+===================================================== */
 async function cargarMesas() {
     try {
         const resp = await fetch("/api/mesas/");
         const data = await resp.json();
 
-        const grid = document.getElementById("mesasGrid");
-        grid.innerHTML = "";
+        mesasGrid.innerHTML = "";
+
+        // Ordenar por número
+        data.mesas.sort((a, b) => Number(a.numero) - Number(b.numero));
 
         data.mesas.forEach(m => {
-
-            // Crear tarjeta moderna
             const card = document.createElement("div");
             card.classList.add("mesa-card");
 
-            // Asignar clase segun estado real
+            let estadoMesa = "libre";
+
             if (m.pedido) {
-                if (m.pedido.estado === "nuevo" || m.pedido.estado === "enviado_a_cocina") {
-                    card.classList.add("estado-pedido");
-                } else {
-                    card.classList.add("estado-ocupado");
+                const e = m.pedido.estado;
+
+                if (["nuevo", "pendiente", "enviado_a_cocina"].includes(e)) {
+                    estadoMesa = "pedido";
+                    card.classList.add("mesa-pedido"); // Amarillo
+                }
+                else if (e === "listo") {
+                    estadoMesa = "listo";
+                    card.classList.add("mesa-listo"); // Rojo
+                }
+                else if (e === "entregado") {
+                    estadoMesa = "entregado";
+                    card.classList.add("mesa-entregado"); // Azul
                 }
             } else {
-                card.classList.add("estado-libre");
+                estadoMesa = "libre";
+                card.classList.add("mesa-libre"); // Verde
             }
-            // Contenido visual de la tarjeta
+
+            card.dataset.estado = estadoMesa;
+            card.dataset.numero = m.numero;
+
             card.innerHTML = `
                 <div class="mesa-number">Mesa ${m.numero}</div>
-                <div class="mesa-status">
-                    ${m.pedido ? `Pedido #${m.pedido.id}` : "Libre"}
-                </div>
-                <div class="mesa-mesero">
-                    ${m.mesero ? "Atendida por: " + m.mesero : ""}
-                </div>
+                <div class="mesa-status">${m.pedido ? "Pedido #" + m.pedido.id : "Libre"}</div>
             `;
 
             card.onclick = () => seleccionarMesa(m.id, m.numero);
-            //Agregarla al grid
-            grid.appendChild(card);
+
+            mesasGrid.appendChild(card);
         });
 
-    } catch (err) {
-        console.error("Error cargando mesas:", err);
+        filtrarMesas();
+
+    } catch (error) {
+        console.error("Error cargando mesas:", error);
     }
 }
 
-
-//Seleccionar MESA
-let mesaSeleccionada = null;
-
-async function seleccionarMesa(id, numero) {
+/* =====================================================
+   SELECCIONAR MESA
+===================================================== */
+function seleccionarMesa(id, numero) {
     mesaSeleccionada = id;
-    document.getElementById("panelTitle").textContent = "Mesa " + numero;
-    cargarPedidoMesa(id);
+    panelTitle.textContent = "Mesa " + numero;
+    cargarPedidoCompleto(id);
 }
 
-//Pedido por mesa
-async function cargarPedidoMesa(id) {
+/* =====================================================
+   CARGAR DETALLE DEL PEDIDO
+===================================================== */
+async function cargarPedidoCompleto(mesaId) {
     try {
-        const resp = await fetch(`/api/mesa/${id}/pedido/`);
-        const data = await resp.json();
+        const r1 = await fetch(`/api/mesa/${mesaId}/pedido/`);
+        const d1 = await r1.json();
 
-        const orderItems = document.getElementById("orderItems");
-        const totalAmount = document.getElementById("totalAmount");
-
-        if (!data.pedido) {
-            orderItems.innerHTML = `<div style="padding:12px;color:#777">No hay pedido para esta mesa.</div>`;
-            totalAmount.textContent = "$0";
+        if (!d1.pedido) {
+            resetPanel();
             return;
         }
 
-        const p = data.pedido;
+        pedidoActualId = d1.pedido.id;
 
-        orderItems.innerHTML = `
-            <div class="pedido-item">
+        const r2 = await fetch(`/api/pedido/${pedidoActualId}/detalle/`);
+        const d2 = await r2.json();
+        if (!d2.success) return;
+
+        const p = d2.pedido;
+
+        let html = `
+            <div class="pedido-data">
                 <strong>Pedido #${p.id}</strong><br>
                 Cliente: ${p.cliente}<br>
                 Personas: ${p.personas}<br>
-                Total: $${p.total}<br>
                 Estado: ${p.estado}<br>
                 <small>${p.fecha}</small>
-            </div>
+                <hr>
+                <strong>Ítems:</strong>
         `;
 
-        const t = Number(p.total) || 0;
-        totalAmount.textContent = "$" + t.toLocaleString("es-CL");
-
-    } catch (err) {
-        console.error("Error cargando pedido de mesa:", err);
-    }
-}
-
-//Enviar pedido a cocina
-async function enviarACocina() {
-    if (!mesaSeleccionada) return alert("Seleccione una mesa primero");
-
-    const resp = await fetch(`/api/mesa/${mesaSeleccionada}/pedido/`);
-    const data = await resp.json();
-
-    if (!data.pedido) {
-        alert("No hay pedido para enviar");
-        return;
-    }
-
-    const pedidoId = data.pedido.id;
-
-    try {
-        const resp2 = await fetch(`/api/pedido/${pedidoId}/enviar_cocina/`, {
-            method: "POST",
-            headers: { "X-CSRFToken": getCSRFToken() }
-        });
-
-        const result = await resp2.json();
-
-        if (result.success) {
-            alert("Pedido enviado a cocina");
-            cargarMesas();
-            cargarPedidoMesa(mesaSeleccionada);
+        if (p.items.length) {
+            html += "<ul>";
+            p.items.forEach(i => {
+                html += `<li>${i.cantidad} × ${i.platillo} — $${i.subtotal}</li>`;
+            });
+            html += "</ul>";
+        } else {
+            html += "<p>No hay ítems aún.</p>";
         }
-    } catch (err) {
-        console.error("Error enviando pedido a cocina:", err);
+
+        html += "</div>";
+
+        orderItems.innerHTML = html;
+        totalAmount.textContent = "$" + Number(p.total).toLocaleString("es-CL");
+
+        // Reset de botones
+        sendKitchenBtn.classList.add("oculto");
+        finishOrderBtn.classList.add("oculto");
+        addItemBtn.classList.add("oculto");
+
+        // ======== LÓGICA CENTRAL DEL FLUJO ========
+        if (p.estado === "nuevo" || p.estado === "pendiente") {
+            sendKitchenBtn.classList.remove("oculto");
+            addItemBtn.classList.remove("oculto");
+        }
+        else if (p.estado === "enviado_a_cocina") {
+            addItemBtn.classList.remove("oculto");
+        }
+        else if (p.estado === "listo") {
+            finishOrderBtn.textContent = "Marcar como ENTREGADO";
+            finishOrderBtn.classList.remove("oculto");
+            addItemBtn.classList.remove("oculto");
+        }
+        else if (p.estado === "entregado") {
+            finishOrderBtn.textContent = "Liberar mesa";
+            finishOrderBtn.classList.remove("oculto");
+        }
+
+    } catch (error) {
+        console.error("Error cargando detalle:", error);
     }
 }
 
-//Obtener CSRF Token
-function getCSRFToken() {
-    const name = "csrftoken";
-    for (const cookie of document.cookie.split(";")) {
-        const trimmed = cookie.trim();
-        if (trimmed.startsWith(name + "="))
-            return trimmed.substring(name.length + 1);
+/* =====================================================
+   ENVIAR A COCINA
+===================================================== */
+sendKitchenBtn.onclick = async () => {
+    if (!pedidoActualId) return;
+
+    await fetch(`/api/pedido/${pedidoActualId}/enviar_cocina/`, {
+        method: "POST",
+        headers: { "X-CSRFToken": csrf() }
+    });
+
+    await cargarMesas();
+    await cargarPedidoCompleto(mesaSeleccionada);
+};
+
+/* =====================================================
+   MARCAR ENTREGADO / LIBERAR MESA
+===================================================== */
+finishOrderBtn.onclick = async () => {
+    if (!pedidoActualId) return;
+
+    const accion = finishOrderBtn.textContent;
+
+    if (accion.includes("ENTREGADO")) {
+        await fetch(`/api/pedido/${pedidoActualId}/marcar_entregado/`, {
+            method: "POST",
+            headers: { "X-CSRFToken": csrf() }
+        });
     }
-    return "";
+    else {
+        await fetch(`/api/pedido/${pedidoActualId}/liberar_mesa/`, {
+            method: "POST",
+            headers: { "X-CSRFToken": csrf() }
+        });
+    }
+
+    resetPanel();
+    await cargarMesas();
+};
+
+/* =====================================================
+   MODAL PARA AGREGAR ÍTEM
+===================================================== */
+addItemBtn.onclick = () => {
+    if (!pedidoActualId) return;
+
+    modalAddItem.classList.remove("oculto");
+    modalItemsContainer.innerHTML = `
+        <p>Aquí irá el listado de platillos para agregar al pedido #${pedidoActualId}.</p>
+        <p>Conéctalo a tu API de platillos cuando quieras.</p>
+    `;
+};
+
+closeModalAddItem.onclick = () => {
+    modalAddItem.classList.add("oculto");
+};
+
+/* =====================================================
+   RESET PANEL
+===================================================== */
+function resetPanel() {
+    panelTitle.textContent = "Selecciona una mesa";
+    orderItems.innerHTML = `<p class="empty-msg">Aquí aparecerán los ítems del pedido.</p>`;
+    totalAmount.textContent = "$0";
+
+    sendKitchenBtn.classList.add("oculto");
+    finishOrderBtn.classList.add("oculto");
+    addItemBtn.classList.add("oculto");
 }
 
-//Eventos
-document.getElementById("sendKitchen").onclick = enviarACocina;
+/* =====================================================
+   FILTROS
+===================================================== */
+function filtrarMesas() {
+    const txt = searchInput.value.toLowerCase();
+    const filtro = filterSelect.value;
 
-//Polling automático
+    document.querySelectorAll(".mesa-card").forEach(card => {
+        let ok = true;
+
+        const numero = card.dataset.numero;
+        const estado = card.dataset.estado;
+
+        if (txt && !numero.includes(txt)) ok = false;
+        if (filtro !== "all" && filtro !== estado) ok = false;
+
+        card.style.display = ok ? "block" : "none";
+    });
+}
+
+searchInput.oninput = filtrarMesas;
+filterSelect.onchange = filtrarMesas;
+
+/* =====================================================
+   CSRF
+===================================================== */
+function csrf() {
+    const name = "csrftoken=";
+    return document.cookie
+        .split(";")
+        .map(x => x.trim())
+        .find(x => x.startsWith(name))
+        ?.substring(name.length);
+}
+
+/* =====================================================
+   POLLING OPTIMIZADO
+===================================================== */
 setInterval(async () => {
-    await cargarMesas(); 
-    if (mesaSeleccionada) {
-        cargarPedidoMesa(mesaSeleccionada);
-    }
-}, 2000);
-// Primera carga
+    await cargarMesas();
+    if (mesaSeleccionada) await cargarPedidoCompleto(mesaSeleccionada);
+}, 2500);
+
+// Primer render
 cargarMesas();
-
-
-
-
-// //Polling automático
-// setInterval(() => {
-//     cargarMesas();
-//     if (mesaSeleccionada) cargarPedidoMesa(mesaSeleccionada);
-// }, 2000);
-
-// //Primera carga
-// cargarMesas();

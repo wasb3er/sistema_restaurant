@@ -3,6 +3,17 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.hashers import make_password, check_password
 
+#Categoria de comida/bebestibles
+class Categoria(models.Model):
+    nombre = models.CharField(max_length=100)
+    slug = models.SlugField(unique=True)
+    orden = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ["orden"]
+
+    def __str__(self):
+        return self.nombre
 
 #Platillo
 class Platillo(models.Model):
@@ -13,6 +24,8 @@ class Platillo(models.Model):
     cantidad = models.IntegerField(default=0)  #stock disponible
     imagen = models.ImageField(upload_to='platillos/', blank=True, null=True)
     creado_en = models.DateTimeField(auto_now_add=True)
+    categoria = models.ForeignKey(Categoria, on_delete=models.SET_NULL, null=True, blank=True)
+    es_del_dia = models.BooleanField(default=False)
 
     class Meta:
         db_table = 'platillos'   #Usa la tabla existente
@@ -25,22 +38,24 @@ class Platillo(models.Model):
 #pedido
 class Pedido(models.Model):
     ESTADOS_PEDIDO = [
-        ('nuevo', 'Nuevo'),                    # Cliente lo crea
-        ('enviado_a_cocina', 'Enviado a Cocina'),  # Mesero lo aprueba
-        ('terminado', 'Terminado'),            # Cocina lo completa
+        ('nuevo', 'Nuevo'),
+        ('pendiente', 'Pendiente'),
+        ('enviado_a_cocina', 'Enviado a Cocina'),
+        ('listo', 'Listo'),
+        ('entregado', 'Entregado'),
+        ('terminado', 'Terminado'),
     ]
+
     nombre_cliente = models.CharField(max_length=100)
     personas = models.IntegerField(default=1)
     fecha = models.DateTimeField(auto_now_add=True)
     total = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     estado = models.CharField(max_length=20, choices=ESTADOS_PEDIDO, default='nuevo')
     mesa = models.ForeignKey("Mesa", on_delete=models.SET_NULL, null=True, blank=True)
+
     class Meta:
         db_table = 'pedido'
-        managed = False          #Tabla creada manualmente
-
-    def __str__(self):
-        return f"Pedido #{self.id} - {self.nombre_cliente}"
+        managed = False
 
 
 #detalle pedido
@@ -68,6 +83,13 @@ class Usuario(AbstractUser):
 
 ##Modelo empleados
 class Empleado(models.Model):
+    ESTADOS_LABORALES = [
+        ('trabajando', 'Trabajando'),
+        ('vacaciones', 'De vacaciones'),
+        ('licencia', 'Licencia'),
+        ('despedido', 'Despedido'),
+    ]
+
     id = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=100)
     username = models.CharField(max_length=50, unique=True)
@@ -82,6 +104,12 @@ class Empleado(models.Model):
     password = models.CharField(max_length=128)  # Contraseña cifrada
     fecha_ingreso = models.DateField(auto_now_add=True)
     activo = models.BooleanField(default=True)
+
+    estado_laboral = models.CharField(
+        max_length=20,
+        choices=ESTADOS_LABORALES,
+        default='trabajando'
+    )
 
     class Meta:
         db_table = 'empleados'
@@ -105,7 +133,7 @@ class Mesa(models.Model):
     estado = models.CharField(max_length=20)
     capacidad = models.IntegerField(null=True, blank=True)
     updated_at = models.DateTimeField(null=True, blank=True)
-
+    pin = models.CharField(max_length=4, null=True, blank=True)
     class Meta:
         db_table = 'mesas'
         managed = False

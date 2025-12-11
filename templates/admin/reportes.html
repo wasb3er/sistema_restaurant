@@ -1,5 +1,159 @@
 <h2>Reportes del Restaurante</h2>
 
+<!-- ==========================
+     FILTROS PRINCIPALES
+============================== -->
+<div class="card filtros-reportes">
+
+    <h3>Filtros de búsqueda</h3>
+
+    <div class="filtros-rapidos" style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:15px;">
+        <button class="filter-btn btn-secondary" data-range="todos">Todos</button>
+        <button class="filter-btn btn-secondary" data-range="hoy">Hoy</button>
+        <button class="filter-btn btn-secondary" data-range="ayer">Ayer</button>
+        <button class="filter-btn btn-secondary" data-range="semana">Esta semana</button>
+        <button class="filter-btn btn-secondary" data-range="mes">Este mes</button>
+    </div>
+
+    <div class="form-row" style="margin-bottom: 15px;">
+        <input 
+            type="text" 
+            id="filtro-cliente" 
+            class="input-field" 
+            placeholder="Buscar por nombre del cliente"
+            style="width:300px;"
+        >
+    </div>
+
+    <div class="filtros-agrupacion" style="margin-bottom:20px;">
+        <label for="filtro-agrupacion" style="font-weight:600; margin-right:10px;">Agrupar por:</label>
+
+        <select id="filtro-agrupacion" class="input-field" style="width:260px;">
+            {% comment %} <option value="dia">Total por día</option> {% endcomment %}
+            {% comment %} <option value="semana">Ventas por semana</option> {% endcomment %}
+            <option value="platillo">Platillo más vendido (unidades)</option>
+            <option value="platillo_ingresos">Platillo con más ingresos</option>
+            <option value="total_vendido">Total vendido (serie temporal)</option>
+        </select>
+    </div>
+
+    <button id="btn-aplicar-filtros" class="btn-primary" style="width:200px;">
+        Aplicar filtros
+    </button>
+
+</div>
+
+
+
+<!-- ==========================
+     CONTENEDOR KPIs
+============================== -->
+<div id="contenedor-kpis">
+    <div class="card">
+
+        <h3>Resumen del periodo</h3>
+
+        <div class="kpi-grid" style="
+            display:grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap:20px; margin-top:15px;
+        ">
+            <div class="kpi">
+                <span class="kpi-title">Total vendido</span>
+                <span id="kpi-total" class="kpi-value">$0</span>
+            </div>
+
+            <div class="kpi">
+                <span class="kpi-title">Cantidad de pedidos</span>
+                <span id="kpi-pedidos" class="kpi-value">0</span>
+            </div>
+
+            <div class="kpi">
+                <span class="kpi-title">Ticket promedio</span>
+                <span id="kpi-ticket" class="kpi-value">$0</span>
+            </div>
+
+            <div class="kpi">
+                <span class="kpi-title">Platillo más vendido</span>
+                <span id="kpi-top-platillo" class="kpi-value">N/A</span>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+<!-- ==========================
+     CONTENEDOR GRÁFICO
+============================== -->
+<div id="contenedor-grafico-platillos" style="display:none;">
+    <div class="card" style="margin-top:20px;">
+        <h3>Gráfico de platillos más vendidos</h3>
+        <canvas id="graficoTopPlatillos" height="120"></canvas>
+    </div>
+</div>
+
+{% comment %} <div id="contenedor-grafico-total" style="display:none;">
+    <h4>Evolución de ingresos</h4>
+    <canvas id="graficoTotalCanvas"></canvas>
+</div> {% endcomment %}
+
+<!-- CONTENEDOR DEL GRÁFICO DE TOTAL VENDIDO -->
+<div id="grafico-total-contenedor" style="display:none; margin-top:25px;">
+    <h3>Total vendido en el periodo</h3>
+    <canvas id="grafico-total"></canvas>
+</div>
+
+
+<!-- ==========================
+     TABLA DE RESULTADOS
+============================== -->
+<div id="contenedor-tabla-reportes">
+    <div class="card" style="margin-top:20px;">
+
+        <h3>Resultados detallados</h3>
+
+        <table class="table" style="margin-top:10px;">
+            <thead>
+                <tr>
+                    <th>ID Pedido</th>
+                    <th>Cliente</th>
+                    <th>Fecha</th>
+                    <th>Total</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+
+            <tbody id="tabla-reportes">
+                <!-- JS llenará esta tabla -->
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+
+
+<!-- ==========================
+     EXPORTAR EXCEL
+============================== -->
+<div class="card" style="margin-top:20px;">
+    <button id="btn-exportar-excel" class="btn-primary" style="width:230px;">
+        Exportar resultados a Excel
+    </button>
+</div>
+
+<!-- Chart.js global -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+
+
+
+
+{% comment %} <h2>Reportes del Restaurante</h2>
+
 <div class="card">
     <h3>Reporte de Ventas</h3>
     <p>Exporta un archivo Excel con todas las ventas registradas.</p>
@@ -10,4 +164,4 @@
     <h3>Reporte de Platillos</h3>
     <p>Genera un Excel con el total vendido por cada platillo.</p>
     <a href="{% url 'reporte_platillos_excel' %}" class="btn-primary">Descargar Excel</a>
-</div>
+</div> {% endcomment %}

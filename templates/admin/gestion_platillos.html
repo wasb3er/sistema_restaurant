@@ -1,7 +1,6 @@
 <h2>Gestión de Platillos</h2>
 
 <div class="card">
-
     <form id="form-crear" enctype="multipart/form-data" class="form-platillos">
 
         <div class="form-row">
@@ -10,20 +9,21 @@
         </div>
 
         <div class="form-row">
-            <input type="number" name="precio" placeholder="Precio" step="0.01" required>
+            <input type="number" name="precio" placeholder="Precio" required>
             <input type="number" name="cantidad" placeholder="Cantidad" required>
         </div>
 
+        <!-- Caja de subida de imagen -->
         <div class="image-upload-box">
-    <label for="imagen" class="image-label">
-        <i class="fa fa-image"></i> Seleccionar imagen
-    </label>
-    
-    <input type="file" id="imagen" name="imagen" accept="image/*">
+            <label for="imagen" class="image-label">
+                <i class="fa fa-image"></i> Seleccionar imagen
+            </label>
 
-    <!--Vista previa-->
-    <img id="preview-img" class="preview-img" src="" alt="Vista previa" style="display:none;">
-</div>
+            <input type="file" id="imagen" name="imagen" accept="image/*">
+
+            <!-- Vista previa -->
+            <img id="preview-img" class="preview-img" src="" alt="Vista previa" style="display:none;">
+        </div>
 
         <div class="form-actions">
             <button type="submit" id="btn-agregar" class="btn-primary">Agregar Platillo</button>
@@ -31,8 +31,24 @@
         </div>
 
     </form>
-
 </div>
+
+<!-- Barra de pestañas de categorías -->
+<div class="card">
+    <div class="categoria-bar">
+        {% comment %} <button class="categoria-pill active" data-cat="todos" onclick="filtrarCategoria('todos')">
+            Todos
+        </button> {% endcomment %}
+        <button class="categoria-pill" data-cat="comidas" onclick="filtrarCategoria('comidas')">Comidas</button>
+        <button class="categoria-pill" data-cat="bebidas" onclick="filtrarCategoria('bebidas')">Bebidas</button>
+        <button class="categoria-pill" data-cat="postres" onclick="filtrarCategoria('postres')">Postres</button>
+        {% comment %} <button class="categoria-pill" data-cat="favoritos" onclick="filtrarCategoria('favoritos')">Favoritos</button> {% endcomment %}
+
+
+    </div>
+</div>
+
+
 
 <div class="card">
     <table class="table">
@@ -46,8 +62,6 @@
             </tr>
         </thead>
 
-        <tbody id="tabla-platillos">
-        
-        </tbody>
+        <tbody id="tabla-platillos"></tbody>
     </table>
 </div>

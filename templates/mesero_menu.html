@@ -1,116 +1,76 @@
 {% load static %}
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Interfaz Mesero — Restaurant</title>
-  <link rel="stylesheet" href="{% static 'mesero_style.css' %}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mesero – RestFreshCO</title>
+    <link rel="stylesheet" href="{% static 'mesero_style.css' %}">
 </head>
 
 <body>
-  <div class="app" role="application">
 
-    <!-- HEADER -->
-    <header>
-      <h1>Mesero</h1>
+<header class="topbar">
+    <h1 class="title">Mesero</h1>
 
-      <div class="header-right">
-        <div class="chip" id="timer">Tiempo 00:00</div>
+    <div class="topbar-right">
+        <div class="chip">Garzón: <strong>{{ request.session.empleado_nombre }}</strong></div>
+        <a href="{% url 'logout_por_rol' 'mesero' %}" class="btn-logout">Cerrar sesión</a>
+    </div>
+</header>
 
-        <div class="chip">
-          Garzón:
-          <strong>{{ request.session.empleado_nombre }}</strong>
-        </div>
-      </div>
-    </header>
+<div class="mesero-layout">
 
+    <!-- ===== MESAS ===== -->
+    <section>
+        <div class="controls">
+            <input id="search" type="search" class="search-box" placeholder="Buscar mesa...">
 
-    <!-- MAPA DE MESAS -->
-    <section class="mesas" aria-label="Mapa de mesas">
-
-      <div class="controls">
-        <div class="search-box">
-          <input id="search" type="search" placeholder="Buscar mesa o pedido">
-        </div>
-
-        <select id="filter" class="filter-select">
-          <option value="all">Todas</option>
-          <option value="libre">Libres</option>
-          <option value="ocupado">Ocupadas</option>
-          <option value="pedido">Con pedido</option>
-        </select>
-      </div>
-
-      <!-- GRID DE MESAS -->
-      <div class="mesas-grid" id="mesasGrid"></div>
-
-
-      <!-- Herramientas -->
-      <div class="tools-row">
-        {% comment %} <button class="btn secondary" id="qrBtn">Escanear QR (simulado)</button>
-        <button class="btn secondary" id="voiceToggle">Activar voz</button> {% endcomment %}
-        <div class="badge" id="notif">Notificaciones: 0</div>
-      </div>
-
-      <!-- Estado general -->
-      <div class="status-row">
-        <div class="card small">
-          <div class="card-title">Reloj de servicio</div>
-          <div class="card-value" id="serviceClock">00:00:00</div>
+            <select id="filter" class="filter-select">
+                <option value="all">Todas</option>
+                <option value="libre">Libres</option>
+                <option value="pedido">Con pedido</option>
+                <option value="listo">Listas</option>
+                <option value="entregado">Entregadas</option>
+            </select>
         </div>
 
-        <div class="card small">
-          <div class="card-title">Mesas atendidas</div>
-          <div class="card-value" id="countMesas">0</div>
-        </div>
-      </div>
-
+        <div id="mesasGrid" class="mesas-grid"></div>
     </section>
 
+    <!-- ===== PANEL ===== -->
+    <aside class="panel">
 
-    <!-- PANEL LATERAL DE PEDIDO -->
-    <aside class="panel" id="panelPedido">
+        <h2 id="panelTitle">Selecciona una mesa</h2>
 
-      <h2 id="panelTitle">Selecciona una mesa</h2>
+        <div id="orderItems" class="order-items">
+            <p class="empty-msg">Aquí aparecerán los ítems del pedido.</p>
+        </div>
 
-      <div class="order-items" id="orderItems">
-        <p class="empty-msg">Aquí aparecerán los ítems del pedido.</p>
-      </div>
+        <div class="totals">
+            <span>Total:</span>
+            <span id="totalAmount">$0</span>
+        </div>
 
-      <div class="totals">
-        <span>Total:</span>
-        <span id="totalAmount">$0</span>
-      </div>
-
-      <div class="panel-actions">
-        <button class="btn" id="sendKitchen">Enviar a cocina</button>
-        {% comment %} <button class="btn secondary" id="splitBill">Dividir cuenta</button> {% endcomment %}
-        <button class="btn secondary" id="addItem">+ Agregar item</button>
-      </div>
-
-      {% comment %} <div class="suggestions">
-        <label>Sugerencias:</label>
-        <span id="suggestions">Lomos hoy (alto en ventas)</span>
-      </div> {% endcomment %}
+        <div class="panel-actions">
+            <button class="btn secondary oculto" id="sendKitchen">Enviar a cocina</button>
+            <button class="btn secondary oculto" id="addItem">+ Agregar ítem</button>
+            <button class="btn warn oculto" id="finishOrder">Acción</button>
+        </div>
 
     </aside>
 
+</div>
 
-    <!-- NAV INFERIOR -->
-    <nav class="bottom-nav" aria-label="Navegación">
-      <div class="nav-item active">Mesas</div>
-      <div class="nav-item">Pedidos</div>
-      <div class="nav-item">Cuentas</div>
-      <div class="nav-item">Rendim.</div>
-    </nav>
+<!-- ===== MODAL PARA AGREGAR ÍTEM ===== -->
+<div id="modalAddItem" class="modal oculto">
+    <div class="modal-content">
+        <button id="closeModalAddItem" class="close-btn">×</button>
+        <h3>Agregar ítem</h3>
+        <div id="modalItemsContainer"></div>
+    </div>
+</div>
 
-  </div>
-
-  <div class="logout-container">
-    <a href="{% url 'logout_por_rol' 'mesero' %}" class="btn logout-btn">Cerrar sesión</a>
-  </div>
-
-  <script src="{% static 'js/mesero_script.js' %}"></script>
+<script src="{% static 'js/mesero_script.js' %}"></script>
 </body>
 </html>

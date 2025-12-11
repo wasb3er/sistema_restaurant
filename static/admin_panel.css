@@ -471,3 +471,234 @@ nav {
     background: #f9a825;
     color: #000;
 }
+
+
+/* ===== Dropdown Estado Laboral - Opción A (Minimalista) ===== */
+
+.estado-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.estado-btn {
+    background: #eef2f7;
+    border: 1px solid #cfd4dc;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.estado-btn:hover {
+    background: #e2e7f0;
+    border-color: #b7bec8;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.estado-text {
+    white-space: nowrap;
+}
+
+.estado-caret {
+    font-size: 10px;
+}
+
+/* Dropdown menu */
+.estado-menu {
+    position: fixed;
+    top: 110%;
+    left: 0;
+    min-width: 160px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+    padding: 6px 0;
+    display: none;
+    z-index: 10;
+}
+
+.estado-dropdown.open .estado-menu {
+    display: block;
+}
+
+/* Opciones */
+.estado-option {
+    width: 100%;
+    border: none;
+    background: transparent;
+    padding: 8px 14px;
+    text-align: left;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.estado-option:hover {
+    background: #f2f4f8;
+}
+
+/* Colores según estado */
+
+.estado-btn.estado-trabajando {
+    border-color: #2e7d32;
+    color: #2e7d32;
+    background: #e6f4ea;
+}
+
+.estado-btn.estado-vacaciones {
+    border-color: #f9a825;
+    color: #b28900;
+    background: #fff8e1;
+}
+
+.estado-btn.estado-licencia {
+    border-color: #1976d2;
+    color: #115293;
+    background: #e3f2fd;
+}
+
+.estado-btn.estado-despedido {
+    border-color: #c62828;
+    color: #b71c1c;
+    background: #ffebee;
+}
+
+.categoria-tabs {
+    display: flex;
+    gap: 12px;
+    padding: 10px 5px;
+}
+
+.categoria-tab {
+    background: #e5e7eb;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.2s;
+}
+
+.categoria-tab:hover {
+    background: #d4d7db;
+}
+
+.categoria-tab.active {
+    background: #0d6efd;
+    color: white;
+}
+
+/* ===== CATEGORÍAS EN GESTIÓN DE PLATILLOS ===== */
+.categoria-bar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.categoria-pill {
+    padding: 8px 16px;
+    background: #e5e7eb;
+    color: #333;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    border: none;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.categoria-pill:hover {
+    background: #d4d7db;
+}
+
+.categoria-pill.active {
+    background: #0d6efd;
+    color: white;
+}
+
+/* Contenedor del gráfico de total vendido */
+    #grafico-total-contenedor {
+        max-width: 900px;
+        margin: 20px auto;
+    }
+
+    /* Tamaño del canvas */
+    #grafico-total {
+        max-height: 380px !important;
+    }
+
+    /* Contenedor de platillos */
+    #contenedor-grafico-platillos {
+        max-width: 900px;
+        margin: 20px auto;
+    }
+
+    #graficoTopPlatillos {
+        max-height: 380px !important;
+    }
+
+/*BORRAR SI ES NECESARIO    */
+#grafico-total-contenedor,
+#contenedor-grafico-platillos .card {
+    padding: 25px;
+    border-radius: 12px;
+    background: #ffffff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.modal-detalle {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.modal-detalle.oculto {
+    display: none;
+}
+
+.modal-contenido {
+    background: white;
+    width: 450px;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.cerrar-modal {
+    float: right;
+    cursor: pointer;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.oculto {
+    display: none !important;
+}
+
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: #1f1f1f;
+    padding: 20px;
+    width: 350px;
+    border-radius: 10px;
+}
+
+.oculto { display: none; }

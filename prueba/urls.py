@@ -41,7 +41,7 @@ urlpatterns = [
     path("login/", views.login_general, name="login_general"),
 
     # Menú del cliente
-    path("menu/", views.menu_view, name="menu"),
+    path("menu/", views.menu, name="menu"),
 
     # Crear pedido (cliente)
     path("crear_pedido/", views.crear_pedido, name="crear_pedido"),
@@ -65,6 +65,7 @@ urlpatterns = [
 
     # API empleados (toggle activo)
     path("api/empleado/<int:empleado_id>/toggle/", views.toggle_empleado_activo, name="toggle_empleado"),
+    path("api/empleado/<int:empleado_id>/estado/", views.cambiar_estado_empleado, name="cambiar_estado_empleado"),
 
 
     # -------------------------
@@ -99,18 +100,63 @@ urlpatterns = [
     path("api/pedido/<int:pedido_id>/marcar_listo/", views.marcar_listo, name="marcar_listo"),
     path("api/pedido/<int:pedido_id>/volver_cocina/", views.volver_cocina, name="volver_cocina"),
     path("api/pedido/<int:pedido_id>/marcar_entregado/", views.marcar_entregado, name="marcar_entregado"),
+    path("api/pedido/<int:pedido_id>/liberar_mesa/", views.liberar_mesa),
+
 
 
     # -------------------------
     # MESAS
     # -------------------------
     path("api/mesas/", views.mesas_api, name="mesas_api"),
-    path("api/mesa/<int:mesa_id>/pedido/", views.pedido_por_mesa_api, name="pedido_por_mesa_api"),
+    # path("api/mesa/<int:mesa_id>/pedido/", views.pedido_por_mesa_api, name="pedido_por_mesa_api"), 
 
     # Reportes Excel
     path("reportes/", views.admin_reportes, name="admin_reportes"),
     path("reportes/ventas/excel/", views.reporte_ventas_excel, name="reporte_ventas_excel"),
     path("reportes/platillos/excel/", views.reporte_platillos_excel, name="reporte_platillos_excel"),
+    path("reportes/ventas/filtrado/excel/", views.reporte_ventas_filtrado_excel, name="reporte_ventas_filtrado_excel"),
+
+    # API reportes (filtros)
+    path("api/reportes/filtrar/", views.api_reportes_filtrar, name="api_reportes_filtrar"),
+
+    path("api/categorias/", views.api_categorias, name="api_categorias"),
+    path("api/pedido/<int:pedido_id>/detalle/", views.api_pedido_detalle, name="api_pedido_detalle"),
+    # path("api/pedido/<int:pedido_id>/detalle/", views.api_pedido_detalle),
+
+    path("api/pedido/<int:pedido_id>/additem/", views.agregar_item_pedido),
+
+    path("api/mesa/<int:mesa_id>/pedido/", views.pedido_por_mesa, name="pedido_por_mesa"),
+    # path("mesa/<int:numero>/", views.mesa_qr_view, name="mesa_qr_view"),
+
+    #rutas de pago
+    # path("pago/resumen/", views.pago_resumen, name="pago_resumen"),
+    # path("pago/webpay/iniciar/", views.webpay_iniciar, name="webpay_iniciar"),
+    # path("pago/webpay/retorno/", views.webpay_retorno, name="webpay_retorno"),
+    # path("guardar_carrito/", views.guardar_carrito, name="guardar_carrito"),
+
+    path("pago/guardar_carrito/", views.guardar_carrito, name="guardar_carrito"),
+    path("pago/resumen/", views.pago_resumen, name="pago_resumen"),
+    path("pago/webpay/iniciar/", views.webpay_iniciar, name="webpay_iniciar"),
+    path("pago/webpay/confirmar/", views.webpay_retorno, name="webpay_retorno"),
+
+
+    #QR
+    # path("cliente/mesa/<int:mesa_id>/", views.confirmar_mesa_qr, name="confirmar_mesa_qr"),
+
+    # QR → formulario con PIN
+    # path("cliente/mesa/<int:numero>/", views.mesa_qr, name="mesa_qr"),
+    path("cliente/mesas/", views.mesa_qr, name="mesa_qr"),
+    # path("cliente/mesas/", views.mesa_qr, name="seleccion_mesas"),
+
+    # Validación → mesa_confirmada.html
+    # path("cliente/mesa/<int:numero>/confirmar/", views.confirmar_mesa, name="confirmar_mesa"), revisar
+    # path("cliente/seleccionar/", views.seleccionar_mesa_manual, name="seleccionar_mesa_manual"),
+
+    #vista general para el flujo unificado
+    # path("cliente/mesas/", views.seleccion_mesas, name="seleccion_mesas"),
+
+    # path("cliente/mesa/<int:mesa_id>/confirmar/", views.confirmar_mesa_qr, name="confirmar_mesa_qr"), REVISAR
+    # path("cliente/mesa/<int:mesa_id>/", views.mesa_qr, name="mesa_qr"),
 
 ]
 

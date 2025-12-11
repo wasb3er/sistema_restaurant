@@ -12,6 +12,19 @@ document.addEventListener("DOMContentLoaded", () => {
     let clienteNombre = localStorage.getItem("clienteNombre");
     let clientePersonas = localStorage.getItem("clientePersonas");
 
+    function mostrarPopupStock(mensaje) {
+    const popup = document.getElementById("popup-stock");
+    const texto = document.getElementById("popup-texto-stock");
+
+    texto.textContent = mensaje;
+    popup.classList.add("mostrar");
+
+    setTimeout(() => {
+        popup.classList.remove("mostrar");
+    }, 3000);
+}
+
+
     // ============================
     // AGREGAR AL CARRITO
     // ============================
@@ -21,7 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (existente) {
             if (existente.cantidad >= stock) {
-                alert(`Solo quedan ${stock} unidades disponibles.`);
+                mostrarPopupStock("No hay suficientes platillos disponibles, por favor elija más opciones.");
                 return;
             }
             existente.cantidad++;
@@ -105,62 +118,44 @@ document.addEventListener("DOMContentLoaded", () => {
     // ============================
     window.confirmarPedido = function () {
 
-        // Verificaciones
-        if (carrito.length === 0) {
-            alert("Tu carrito está vacío.");
-            return;
-        }
+    if (carrito.length === 0) {
+        mostrarPopupStock("Tu carrito está vacío.");
+        return;
+    }
 
-        clienteNombre = localStorage.getItem("clienteNombre");
-        clientePersonas = localStorage.getItem("clientePersonas");
-        mesa_id = localStorage.getItem("mesa_id");
+    const clienteNombre = localStorage.getItem("clienteNombre");
+    const clientePersonas = localStorage.getItem("clientePersonas");
+    const mesa_id = localStorage.getItem("mesa_id");
 
-        if (!clienteNombre) {
-            alert("Debes ingresar tus datos primero.");
-            return;
-        }
+    if (!clienteNombre || !mesa_id) {
+        alert("Debes ingresar tus datos y seleccionar mesa.");
+        return;
+    }
 
-        if (!mesa_id) {
-            alert("Debes seleccionar una mesa antes de continuar.");
-            return;
-        }
-
-        const pedidoData = {
-            nombre: clienteNombre,
+    fetch("/pago/guardar_carrito/", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": getCookie("csrftoken")
+        },
+        body: JSON.stringify({
+            carrito: carrito,
+            cliente: clienteNombre,
             personas: clientePersonas,
-            platillos: carrito,
-            mesa_id: Number(mesa_id)
-        };
-
-        fetch("/crear_pedido/", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRFToken": getCookie("csrftoken")
-            },
-            body: JSON.stringify(pedidoData)
+            mesa_id: mesa_id
         })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            window.location.href = "/pago/resumen/";
+        } else {
+            alert("Error guardando carrito en sesión.");
+        }
+    });
+};
 
-                    alert(`Pedido #${data.pedido_id} registrado correctamente.\nTotal: $${data.total}`);
 
-                    // Vaciar carrito
-                    carrito = [];
-                    actualizarCarrito();
-
-                    // Limpiar mesa después del pedido
-                    localStorage.removeItem("mesa_id");
-
-                    // Redirigir al inicio para nuevo cliente
-                    window.location.href = "/";
-                } else {
-                    alert("Error: " + data.error);
-                }
-            })
-            .catch(err => console.error("Error al crear pedido:", err));
-    };
 
     // ============================
     // OBTENER TOKEN CSRF
@@ -182,4 +177,48 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Mostrar carrito al cargar
     actualizarCarrito();
+});
+
+/* FILTRAR POR CATEGORÍA */
+function filtrarCategoria(slug) {
+    document.querySelectorAll(".categoria-pill").forEach(p => p.classList.remove("active"));
+
+    let activeBtn = [...document.querySelectorAll(".categoria-pill")]
+                   .find(p => p.dataset.cat === slug || slug === "todas");
+
+    if (activeBtn) activeBtn.classList.add("active");
+
+    document.querySelectorAll(".platillo-card").forEach(card => {
+        if (slug === "todas" || card.dataset.cat === slug) {
+            card.classList.remove("hidden");
+        } else {
+            card.classList.add("hidden");
+        }
+    });
+}
+
+function toggleCarrito() {
+    document.getElementById("carrito-panel").classList.toggle("open");
+    document.getElementById("carrito-overlay").classList.toggle("show");
+}
+
+function mostrarCategoria(slug) {
+    // Ocultar todas
+    document.querySelectorAll(".categoria-seccion").forEach(sec => sec.classList.remove("active"));
+
+    // Mostrar seleccionada
+    document.getElementById("cat-" + slug).classList.add("active");
+
+    // Estilo de pestañas
+    document.querySelectorAll(".categoria-btn").forEach(btn => btn.classList.remove("active"));
+    document.getElementById("tab-" + slug).classList.add("active");
+}
+
+// Activar por defecto la primera categoría
+document.addEventListener("DOMContentLoaded", () => {
+    const first = document.querySelector(".categoria-btn");
+    if (first) {
+        first.classList.add("active");
+        mostrarCategoria(first.id.replace("tab-", ""));
+    }
 });

@@ -83,3 +83,80 @@ button:hover {
 .ready button:hover {
   background: #49c264;
 }
+
+/* NAVBAR NUEVA */
+.navbar {
+  background: #2b2b2b;
+  padding: 15px 25px;
+  display: flex;
+  justify-content: space-between; /* Título left, logout right */
+  align-items: center;
+  color: white;
+  font-size: 1.6rem;
+  font-weight: bold;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+}
+
+.nav-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-logout {
+  color: #ffcccb;
+  text-decoration: none;
+  font-size: 1rem;
+  padding: 8px 14px;
+  border-radius: 6px;
+  background: #444;
+  transition: 0.2s ease;
+}
+
+.btn-logout:hover {
+  background: #666;
+  color: #ffffff;
+}
+
+
+/* Toast / Alerta inferior tipo Burger King */
+.toast {
+  position: fixed;
+  bottom: -80px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #28a745;
+  color: white;
+  padding: 14px 22px;
+  border-radius: 6px;
+  font-size: 1rem;
+  min-width: 260px;
+  text-align: center;
+  opacity: 0;
+  transition: all 0.4s ease;
+  z-index: 9999;
+}
+
+.toast.show {
+  bottom: 20px;
+  opacity: 1;
+}
+
+.noti-success {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: #198754;   /* verde éxito */
+    color: white;
+    padding: 14px 20px;
+    text-align: center;
+    font-size: 17px;
+    z-index: 9999;
+    opacity: 1;
+    transition: opacity 0.6s ease;
+}
+
+.noti-success.hide {
+    opacity: 0;
+}

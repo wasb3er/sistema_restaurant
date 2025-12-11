@@ -7,12 +7,13 @@
   <title>Panel del Cocinero</title>
   <link rel="stylesheet" href="{% static 'cook.css' %}">
 </head>
+<div id="toast" class="toast"></div>
+
 <body>
 
   <nav class="navbar">
-    <h1>🍽️ Panel del Cocinero</h1>
-    {% comment %} <button onclick="window.location.href='{% url 'login_general' %}'" class="btn-volver">Cerrar sesión</button> {% endcomment %}
-    <a href="{% url 'logout_por_rol' 'cocinero' %}" class="btn-volver">Cerrar sesión</a>
+      <div class="nav-title">🍽️ Panel del Cocinero</div>
+      <a href="{% url 'logout_por_rol' 'cocinero' %}" class="btn-logout">Cerrar sesión</a>
   </nav>
 
   <main class="layout">
