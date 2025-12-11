@@ -651,3 +651,166 @@ html, body {
     opacity: 1;
 }
 
+
+@media (max-width: 1024px) {
+
+    .navbar {
+        padding: 10px 24px;
+    }
+
+    .hero-margo {
+        gap: 40px;
+        padding: 0 24px;
+    }
+
+    .hero-left .hero-title {
+        font-size: 36px;
+    }
+
+    .big-carousel {
+        height: 360px;
+        max-width: 550px;
+    }
+}
+
+
+@media (max-width: 768px) {
+
+    /* NAVBAR */
+    .navbar {
+        padding: 8px 16px;
+    }
+
+    .nav-brand {
+        font-size: 20px;
+    }
+
+    .nav-admin {
+        padding: 6px 12px;
+        font-size: 13px;
+    }
+
+    /* HERO */
+    .hero-margo {
+        flex-direction: column-reverse;
+        text-align: center;
+        margin-top: 90px;
+        gap: 30px;
+    }
+
+    .hero-left .hero-title {
+        font-size: 30px;
+    }
+
+    .hero-left .hero-subtitle {
+        font-size: 16px;
+    }
+
+    .hero-buttons {
+        justify-content: center;
+    }
+
+    .btn-primary {
+        padding: 10px 22px;
+        font-size: 16px;
+    }
+
+    /* CARRUSEL */
+    .big-carousel {
+        height: 300px;
+        max-width: 90%;
+    }
+
+    .big-prev, .big-next {
+        font-size: 22px;
+        padding: 10px;
+    }
+
+    .big-caption {
+        font-size: 14px;
+        padding: 6px 14px;
+    }
+}
+
+
+@media (max-width: 480px) {
+
+    /* NAVBAR */
+    .navbar {
+        padding: 8px 12px;
+    }
+
+    .nav-brand {
+        font-size: 18px;
+    }
+
+    .nav-admin img {
+        width: 16px;
+        height: 16px;
+    }
+
+    /* HERO */
+    .hero-left .hero-title {
+        font-size: 26px;
+    }
+
+    .hero-left .hero-subtitle {
+        font-size: 15px;
+    }
+
+    /* CARRUSEL */
+    .big-carousel {
+        height: 250px;
+        border-radius: 14px;
+    }
+
+    .big-caption {
+        bottom: 12px;
+        font-size: 13px;
+    }
+
+    /* FAVORITOS */
+    .fav-card {
+        width: 90%;
+        max-width: 260px;
+        margin: auto;
+    }
+
+    /* CATEGORÍAS */
+    .categorias-grid {
+        grid-template-columns: 1fr;
+        gap: 18px;
+        width: 95%;
+    }
+
+    .cat-card img {
+        height: 180px;
+    }
+
+    /* FOOTER */
+    .footer {
+        padding: 20px 10px;
+        font-size: 14px;
+    }
+}
+
+
+@media (max-width: 360px) {
+
+    .hero-left .hero-title {
+        font-size: 24px;
+    }
+
+    .btn-primary {
+        width: 100%;
+        padding: 10px;
+    }
+
+    .big-carousel {
+        height: 210px;
+    }
+
+    .footer-copy {
+        font-size: 13px;
+    }
+}

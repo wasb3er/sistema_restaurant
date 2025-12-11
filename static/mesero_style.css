@@ -229,3 +229,151 @@ h1, h2, h3, p {
     color: #ccc;
     cursor: pointer;
 }
+
+
+@media (max-width: 1200px) {
+    .mesero-layout {
+        grid-template-columns: 55% 45%;
+        gap: 18px;
+    }
+
+    .mesa-card {
+        padding: 12px;
+    }
+
+    .title {
+        font-size: 22px;
+    }
+}
+
+
+@media (max-width: 900px) {
+
+    .mesero-layout {
+        grid-template-columns: 1fr;
+        padding: 12px;
+        gap: 25px;
+    }
+
+    /* Panel pasa abajo del listado */
+    .panel {
+        order: 2;
+        min-height: auto;
+        padding: 18px;
+    }
+
+    /* Grilla de mesas más cómoda */
+    .mesas-grid {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 12px;
+    }
+
+    .mesa-card {
+        padding: 12px;
+    }
+
+    /* Controles */
+    .controls {
+        flex-direction: column;
+    }
+
+    .search-box,
+    .filter-select {
+        width: 100%;
+    }
+}
+
+
+@media (max-width: 600px) {
+
+    /* TOPBAR */
+    .topbar {
+        padding: 12px 14px;
+    }
+
+    .title {
+        font-size: 20px;
+    }
+
+    .topbar-right {
+        gap: 8px;
+    }
+
+    .btn-logout {
+        padding: 6px 10px;
+        font-size: 13px;
+    }
+
+    /* MESAS */
+    .mesas-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 10px;
+    }
+
+    .mesa-card {
+        padding: 10px;
+        border-radius: 10px;
+    }
+
+    .mesa-number {
+        font-size: 18px;
+    }
+
+    /* PANEL */
+    .panel {
+        padding: 16px;
+    }
+
+    #panelTitle {
+        font-size: 20px;
+    }
+
+    .order-items {
+        padding: 12px;
+    }
+
+    .panel-actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .btn {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+
+@media (max-width: 400px) {
+
+    .topbar {
+        padding: 10px 12px;
+    }
+
+    .title {
+        font-size: 18px;
+    }
+
+    .chip {
+        font-size: 13px;
+    }
+
+    /* MESAS compactas */
+    .mesas-grid {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    }
+
+    .mesa-card {
+        padding: 8px;
+    }
+
+    .mesa-number {
+        font-size: 16px;
+    }
+
+    /* Modal adaptado */
+    .modal-content {
+        width: 90%;
+        padding: 18px;
+    }
+}

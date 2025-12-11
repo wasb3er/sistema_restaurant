@@ -1287,3 +1287,194 @@ h3.fw-bold {
     min-width: 80px;
     text-align: right;
 }
+
+
+/* ==============================================
+   RESPONSIVE — TABLETS (≤ 1024px)
+================================================= */
+@media (max-width: 1024px) {
+
+    /* Navbar */
+    .navbar {
+        padding: 10px 20px;
+        gap: 10px;
+    }
+
+    .nav-links {
+        gap: 20px;
+    }
+
+    /* Tarjetas */
+    .menu-img {
+        height: 220px;
+    }
+
+    .categoria-bar {
+        padding: 12px 8px;
+        gap: 10px;
+    }
+
+    .categoria-pill {
+        padding: 6px 14px;
+        font-size: 14px;
+    }
+
+    /* Carrito */
+    .carrito-panel {
+        width: 300px;
+    }
+}
+
+
+@media (max-width: 768px) {
+
+    /* NAVBAR */
+    .navbar {
+        padding: 8px 14px;
+    }
+
+    .nav-links {
+        display: none; /* Ocultar enlaces para evitar romper layout */
+    }
+
+    .nav-brand {
+        font-size: 1.2rem;
+    }
+
+    /* CATEGORÍAS */
+    .categoria-bar {
+        padding: 10px 6px;
+        gap: 8px;
+    }
+
+    .categoria-pill {
+        padding: 6px 12px;
+        font-size: 13px;
+    }
+
+    /* GRID DE PLATILLOS */
+    #contenedor-platillos > div {
+        width: 100%;
+        max-width: 400px;
+        margin: auto;
+    }
+
+    .menu-img {
+        height: 200px;
+    }
+
+    .menu-card {
+        padding: 12px;
+        border-radius: 14px;
+    }
+
+    .menu-title {
+        font-size: 1.2rem;
+    }
+
+    .menu-desc {
+        font-size: .9rem;
+    }
+
+    /* CARRITO LATERAL */
+    .carrito-panel {
+        width: 100%;
+        height: auto;
+        max-height: 80vh;
+        right: -100%;
+        border-left: none;
+    }
+
+    .carrito-panel.open {
+        right: 0;
+    }
+}
+
+
+@media (max-width: 480px) {
+
+    /* NAVBAR */
+    .navbar {
+        padding: 6px 12px;
+    }
+
+    .nav-admin {
+        padding: 4px 10px;
+        font-size: 12px;
+    }
+
+    .cart-icon-container {
+        padding: 5px 8px;
+    }
+
+    #navbar-total {
+        font-size: 13px;
+    }
+
+    /* CATEGORÍAS */
+    .categoria-pill {
+        padding: 5px 10px;
+        font-size: 12px;
+    }
+
+    /* TARJETAS */
+    .menu-img {
+        height: 180px;
+    }
+
+    .menu-card {
+        padding: 10px;
+    }
+
+    .menu-title {
+        font-size: 1.1rem;
+    }
+
+    .menu-desc {
+        font-size: 0.85rem;
+    }
+
+    .menu-info {
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .menu-btn {
+        font-size: 0.9rem;
+        padding: 10px;
+    }
+
+    /* CARRITO */
+    .carrito-panel {
+        width: 100%;
+        padding: 16px;
+        border-radius: 18px 18px 0 0;
+        height: auto;
+    }
+}
+
+
+@media (max-width: 360px) {
+
+    .nav-brand {
+        font-size: 1rem;
+    }
+
+    .categoria-pill {
+        padding: 4px 8px;
+        font-size: 11px;
+    }
+
+    .menu-img {
+        height: 150px;
+    }
+
+    .menu-title {
+        font-size: 1rem;
+    }
+
+    .menu-btn {
+        padding: 8px;
+        font-size: 0.85rem;
+    }
+}
