@@ -289,3 +289,196 @@ input:checked + .slider:before {
     from {opacity: 0; transform: translateY(-20px);}
     to {opacity: 1; transform: translateY(0);}
 }
+
+
+
+/* NUEVO DISEÑO RESPONSIVO REVISAR */
+/* ===================================================
+   ========= RESPONSIVE DESIGN (TABLET / PHONE) =======
+   =================================================== */
+
+/* TABLET: entre 769px y 1024px */
+@media (max-width: 1024px) {
+
+    .login-navbar .nav-container {
+        padding: 0 24px;
+    }
+
+    .logo-container {
+        margin-top: 120px;
+    }
+
+    .logo-grande {
+        width: 130px;
+    }
+
+    .login-card {
+        width: 320px;
+        padding: 30px 26px;
+    }
+
+    h2 {
+        font-size: 24px;
+    }
+
+    .subtitle {
+        font-size: 15px;
+    }
+}
+
+/* TABLET PEQUEÑA / CELULAR GRANDE: entre 481px y 768px */
+@media (max-width: 768px) {
+
+    .login-navbar {
+        height: 60px;
+    }
+
+    .login-navbar .nav-container {
+        padding: 0 18px;
+    }
+
+    .nav-volver {
+        padding: 6px 14px;
+        font-size: 14px;
+    }
+
+    .logo-container {
+        margin-top: 105px;
+    }
+
+    .logo-grande {
+        width: 120px;
+    }
+
+    .login-wrapper {
+        height: auto;
+        margin-top: 20px;
+        align-items: center;
+    }
+
+    .login-card {
+        width: 300px;
+        padding: 28px 22px;
+        border-radius: 16px;
+    }
+
+    h2 {
+        font-size: 22px;
+    }
+
+    .subtitle {
+        font-size: 14px;
+        margin-bottom: 20px;
+    }
+
+    .input-group input {
+        font-size: 14px;
+    }
+
+    .btn-login {
+        font-size: 16px;
+        padding: 11px;
+    }
+}
+
+/* CELULARES medianos y pequeños: entre 361px y 480px */
+@media (max-width: 480px) {
+
+    .login-navbar {
+        height: 55px;
+    }
+
+    .login-navbar .nav-container {
+        padding: 0 14px;
+    }
+
+    .login-logo img {
+        height: 38px;
+    }
+
+    .nav-volver {
+        padding: 5px 12px;
+        font-size: 13px;
+    }
+
+    .logo-container {
+        margin-top: 90px;
+    }
+
+    .logo-grande {
+        width: 110px;
+    }
+
+    .login-card {
+        width: 90%;
+        padding: 26px 20px;
+        border-radius: 15px;
+    }
+
+    h2 {
+        font-size: 20px;
+    }
+
+    .subtitle {
+        font-size: 13px;
+    }
+
+    .input-group input {
+        font-size: 13px;
+    }
+
+    .btn-login {
+        font-size: 15px;
+        padding: 10px;
+    }
+
+    .switch-row {
+        margin-bottom: 20px;
+    }
+}
+
+/* CELULARES MUY PEQUEÑOS: 360px o menos */
+@media (max-width: 360px) {
+
+    .login-navbar {
+        height: 50px;
+    }
+
+    .login-navbar .nav-container {
+        padding: 0 10px;
+    }
+
+    .logo-container {
+        margin-top: 70px;
+    }
+
+    .logo-grande {
+        width: 95px;
+    }
+
+    .login-card {
+        width: 92%;
+        padding: 22px 18px;
+    }
+
+    h2 {
+        font-size: 18px;
+    }
+
+    .subtitle {
+        font-size: 12px;
+        margin-bottom: 18px;
+    }
+
+    .input-group input {
+        font-size: 12px;
+    }
+
+    .input-group label {
+        font-size: 12px;
+    }
+
+    .btn-login {
+        font-size: 14px;
+    }
+}
